@@ -28,7 +28,9 @@ const Dashboard = () => {
   }, []);
 
   const selectLocation = (e: MouseEvent, accountNumber: number) => {
-    const activeAccountEl = document.getElementsByClassName("bg-accent");
+    const activeAccountEl = document.getElementsByClassName(
+      "bg-accent account-number"
+    );
     activeAccountEl[0]?.classList.remove("bg-accent");
     e.target?.classList.add("bg-accent");
 

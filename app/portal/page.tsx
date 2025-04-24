@@ -16,8 +16,21 @@ import Profile from "../../components/portal/Profile";
 const Portal = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
 
+  // const firstMenuItem = document.getElementById("first-menu-item");
+  const selectTab = (tabName: string) => {
+    const activeMenuItem = document.getElementsByClassName(
+      "active-sidebar-item sidebar-item"
+    )[0];
+    activeMenuItem.classList.remove("active-sidebar-item");
+
+    const selectedMenuItem = document.getElementById(tabName);
+    selectedMenuItem!.classList.add("active-sidebar-item");
+
+    setActiveTab(tabName);
+  };
+
   const renderContent = () => {
-    const obj: Record<string, FC> = {
+    const menuMap: Record<string, FC> = {
       dashboard: Dashboard,
       payment: Payment,
       paymentHistory: PaymentHistory,
@@ -25,47 +38,59 @@ const Portal = () => {
       inbox: Inbox
     };
 
-    const ActiveComponent = obj[activeTab] ?? Dashboard;
+    const ActiveComponent = menuMap[activeTab] ?? Dashboard;
     return <ActiveComponent />;
   };
 
   return (
     <div className="p-10 flex flex-row">
-      <Sidebar aria-label="Default sidebar example" color="green">
+      <Sidebar aria-label="Default sidebar example">
         <SidebarItems>
           <SidebarItemGroup>
-            <SidebarItem onClick={() => setActiveTab("dashboard")}>
+            <SidebarItem
+              id="dashboard"
+              className="active-sidebar-item sidebar-item"
+              onClick={() => selectTab("dashboard")}
+            >
               Dashboard
             </SidebarItem>
             <SidebarItem
-              onClick={() => setActiveTab("payment")}
+              id="payment"
+              onClick={() => selectTab("payment")}
               label="Coming Soon"
               labelColor="dark"
+              className="sidebar-item"
             >
               Make a Payment
             </SidebarItem>
             <SidebarItem
-              onClick={() => setActiveTab("inbox")}
+              id="inbox"
+              onClick={() => selectTab("inbox")}
               label="Coming Soon"
               labelColor="dark"
+              className="sidebar-item"
             >
               Inbox
             </SidebarItem>
             <SidebarItem
-              onClick={() => setActiveTab("profile")}
+              id="profile"
+              onClick={() => selectTab("profile")}
               label="Coming Soon"
               labelColor="dark"
+              className="sidebar-item"
             >
               Profile
             </SidebarItem>
             <SidebarItem
-              onClick={() => setActiveTab("paymentHistory")}
+              id="paymentHistory"
+              onClick={() => selectTab("paymentHistory")}
               label="Coming Soon"
               labelColor="dark"
+              className="sidebar-item"
             >
               Payment History
             </SidebarItem>
-            <SidebarItem>Sign Out</SidebarItem>
+            <SidebarItem className="bg-error text-white">Sign Out</SidebarItem>
           </SidebarItemGroup>
         </SidebarItems>
       </Sidebar>

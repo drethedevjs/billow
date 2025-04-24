@@ -49,3 +49,7 @@ h2 {
 h3 {
   @apply text-2xl;
 }
+
+.active-sidebar-item {
+  @apply !font-bold text-white !bg-accent;
+}
