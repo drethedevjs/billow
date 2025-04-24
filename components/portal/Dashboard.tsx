@@ -1,0 +1,139 @@
+"use client";
+import { accountData as data } from "@/data/accountData";
+import { AccountData } from "@/interfaces/AccountData";
+import Location from "@/interfaces/Location";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeadCell,
+  TableRow
+} from "flowbite-react";
+import React, { useEffect, useState } from "react";
+
+const Dashboard = () => {
+  const whichAccount: number = 4;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [accountData, setAccountData] = useState<AccountData>(
+    data[whichAccount]
+  );
+  const [location, setLocation] = useState<Location>(
+    data[whichAccount].locations[0]
+  );
+
+  useEffect(() => {
+    const firstAccount = document.getElementsByClassName("account-number")[0];
+    firstAccount.classList.add("bg-accent");
+  }, []);
+
+  const selectLocation = (e: MouseEvent, accountNumber: number) => {
+    const activeAccountEl = document.getElementsByClassName("bg-accent");
+    activeAccountEl[0]?.classList.remove("bg-accent");
+    e.target?.classList.add("bg-accent");
+
+    const loc = accountData.locations.find(
+      (l) => l.accountNumber === accountNumber
+    );
+    setLocation(loc!);
+  };
+
+  const getTotal = () => {
+    return location.services
+      .reduce(
+        (acc, currentValue) => acc + currentValue.price + currentValue.penalty,
+        0
+      )
+      .toFixed(2);
+  };
+  return (
+    <>
+      <h1>Dashboard</h1>
+
+      <h2 className="mt-8">{accountData.utilityCompanyName}</h2>
+
+      <p className="my-4">
+        <span className="font-semibold">Customer Name: </span>
+        {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
+      </p>
+      <hr></hr>
+      <div className="flex flex-row mt-5">
+        <div className="w-full md:w-1/2 text-center">
+          <h3>Account Number</h3>
+        </div>
+        <div className="w-full md:w-1/2 text-center">
+          <h3>Services</h3>
+        </div>
+      </div>
+      <div className="flex flex-row mt-5">
+        <div className="w-full md:w-1/2">
+          <ul className="bg-primary">
+            {accountData.locations.map((l) => {
+              return (
+                <li
+                  key={l.accountNumber}
+                  id={l.accountNumber.toString()}
+                  onClick={(e) => selectLocation(e, l.accountNumber)}
+                  className="border-2 text-center p-3 text-white account-number"
+                >
+                  {l.accountNumber} | {l.address.address1}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+        <div className="w-full md:w-1/2">
+          <div className="overflow-x-auto px-4 pb-5">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableHeadCell>Utility</TableHeadCell>
+                  <TableHeadCell>Cost</TableHeadCell>
+                </TableRow>
+              </TableHead>
+              <TableBody className="divide-y">
+                {location.services.map((s, idx) => {
+                  return (
+                    <React.Fragment key={idx}>
+                      <TableRow
+                        key={s.name}
+                        className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                      >
+                        <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                          {s.name}
+                        </TableCell>
+                        <TableCell>${s.price.toFixed(2)}</TableCell>
+                      </TableRow>
+                      {s.penalty > 0 ? (
+                        <tr
+                          key={`${s.name}-penalty`}
+                          className="bg-error dark:border-gray-700 dark:bg-gray-800 text-white"
+                        >
+                          <td className="whitespace-nowrap font-medium text-right">
+                            Penalty
+                          </td>
+                          <td className="text-center">
+                            ${s.penalty.toFixed(2)}
+                          </td>
+                        </tr>
+                      ) : null}
+                    </React.Fragment>
+                  );
+                })}
+
+                <TableRow className="bg-white dark:border-gray-700 dark:bg-gray-800 font-bold text-xl">
+                  <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    Total Due:
+                  </TableCell>
+                  <TableCell className="">${getTotal()}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export default Dashboard;
