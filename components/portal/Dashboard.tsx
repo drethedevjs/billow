@@ -3,6 +3,7 @@ import { accountData as data } from "@/data/accountData";
 import { AccountData } from "@/interfaces/AccountData";
 import Location from "@/interfaces/Location";
 import {
+  Button,
   Table,
   TableBody,
   TableCell,
@@ -11,13 +12,12 @@ import {
   TableRow
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
+import { BiDollarCircle } from "react-icons/bi";
 
 const Dashboard = () => {
   const whichAccount: number = 4;
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [accountData, setAccountData] = useState<AccountData>(
-    data[whichAccount]
-  );
+  const accountData: AccountData = data[whichAccount];
+
   const [location, setLocation] = useState<Location>(
     data[whichAccount].locations[0]
   );
@@ -27,7 +27,8 @@ const Dashboard = () => {
     firstAccount.classList.add("bg-accent");
   }, []);
 
-  const selectLocation = (e: MouseEvent, accountNumber: number) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const selectLocation = (e: any, accountNumber: number) => {
     const activeAccountEl = document.getElementsByClassName(
       "bg-accent account-number"
     );
@@ -76,7 +77,7 @@ const Dashboard = () => {
                   key={l.accountNumber}
                   id={l.accountNumber.toString()}
                   onClick={(e) => selectLocation(e, l.accountNumber)}
-                  className="border-2 text-center p-3 text-white account-number"
+                  className="border-b-2 text-center p-3 text-white account-number"
                 >
                   {l.accountNumber} | {l.address.address1}
                 </li>
@@ -109,7 +110,7 @@ const Dashboard = () => {
                       {s.penalty > 0 ? (
                         <tr
                           key={`${s.name}-penalty`}
-                          className="bg-error dark:border-gray-700 dark:bg-gray-800 text-white"
+                          className="bg-error dark:border-gray-700 dark:bg-gray-800 text-white h-6"
                         >
                           <td className="whitespace-nowrap font-medium text-right">
                             Penalty
