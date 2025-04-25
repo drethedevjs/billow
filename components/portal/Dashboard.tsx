@@ -53,7 +53,9 @@ const Dashboard = () => {
     <>
       <h1>Dashboard</h1>
 
-      <h2 className="mt-8">{accountData.utilityCompanyName}</h2>
+      <h2 className="mt-8 p-3 bg-accent text-white font-semibold rounded-sm">
+        {accountData.utilityCompanyName}
+      </h2>
 
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
