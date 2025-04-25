@@ -3,10 +3,10 @@ import {
   Navbar,
   NavbarBrand,
   NavbarCollapse,
-  NavbarLink,
   NavbarToggle
 } from "flowbite-react";
 import Link from "next/link";
+import { NavLink } from "./NavLinks";
 
 const Header = () => {
   return (
@@ -32,13 +32,11 @@ const Header = () => {
         <NavbarToggle />
       </div>
       <NavbarCollapse>
-        <NavbarLink href="/">Home</NavbarLink>
-        <NavbarLink as={Link} href="#">
-          About
-        </NavbarLink>
-        <NavbarLink href="#">FAQ</NavbarLink>
-        <NavbarLink href="/portal">Dashboard</NavbarLink>
-        <NavbarLink href="#">Contact</NavbarLink>
+        <NavLink href="/">Home</NavLink>
+        <NavLink href="/about">About</NavLink>
+        <NavLink href="/faq">FAQ</NavLink>
+        <NavLink href="/portal">Dashboard</NavLink>
+        <NavLink href="/contact">Contact</NavLink>
       </NavbarCollapse>
     </Navbar>
   );
