@@ -131,6 +131,13 @@ const Dashboard = () => {
                 </TableRow>
               </TableBody>
             </Table>
+            <Button
+              href="/pay"
+              className="mt-3 w-full bg-primary hover:bg-accent transition-colors dark:bg-accent dark:hover:bg-slate dark:hover:text-accent"
+            >
+              <BiDollarCircle className="mr-2 h-5 w-5" />
+              Make Payment
+            </Button>
           </div>
         </div>
       </div>
