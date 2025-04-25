@@ -61,7 +61,7 @@ const Portal = () => {
               labelColor="dark"
               className="sidebar-item"
             >
-              Make a Payment
+              Pay Bill
             </SidebarItem>
             <SidebarItem
               id="inbox"
