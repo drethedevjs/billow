@@ -28,7 +28,9 @@ const Header = () => {
         >
           Login
         </a>
-        <Button className="bg-accent">Sign Up</Button>
+        <Button className="bg-accent dark:bg-accent transition-colors dark:hover:bg-white dark:hover:text-accent">
+          Sign Up
+        </Button>
         <NavbarToggle />
       </div>
       <NavbarCollapse>
