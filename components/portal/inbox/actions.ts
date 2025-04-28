@@ -1,10 +1,25 @@
-import InboxActions from "@/interfaces/InboxActions";
+import { InboxAction } from "@/types/InboxAction";
+import inboxTypes from "./actionsTypes";
 
-const types: InboxActions = {
-  DELETE_MESSAGE: "DELETE_MESSAGE",
-  ARCHIVE_MESSAGE: "ARCHIVE_MESSAGE",
-  MARK_READ: "MARK_READ",
-  MARK_UNREAD: "MARK_UNREAD"
+const inboxActions = {
+  markRead: (messageId: number) => {
+    return {
+      type: inboxTypes.MARK_READ as InboxAction,
+      payload: messageId
+    };
+  },
+  markUnread: (messageId: number) => {
+    return {
+      type: inboxTypes.MARK_UNREAD as InboxAction,
+      payload: messageId
+    };
+  },
+  deleteMessage: (messageId: number) => {
+    return {
+      type: inboxTypes.DELETE_MESSAGE as InboxAction,
+      payload: messageId
+    };
+  }
 };
 
-export default types;
+export default inboxActions;

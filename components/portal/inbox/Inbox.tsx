@@ -1,6 +1,5 @@
 "use client";
 import { InboxItem } from "@/interfaces/InboxItem";
-import { faker } from "@faker-js/faker";
 import {
   Table,
   TableBody,
@@ -10,29 +9,57 @@ import {
   TableRow
 } from "flowbite-react";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
+import { BsEnvelopeArrowDown, BsEnvelopeArrowUpFill } from "react-icons/bs";
+import inboxActions from "./actions";
 import store from "./store";
 
-function generateInboxItems(): InboxItem[] {
-  return Array.from({ length: 10 }, () => ({
-    id: faker.number.int(),
-    subject: faker.lorem.words(),
-    sender: faker.internet.email(),
-    date: faker.date.recent({ days: 30 }),
-    message: faker.lorem.paragraph()
-  })).sort((a, b) => b.date.getTime() - a.date.getTime());
-}
-
-const inbox = generateInboxItems();
-
 const Inbox = () => {
+  const [inboxMessages, setInboxMessages] = useState<InboxItem[]>(
+    store.getState()
+  );
+
+  useEffect(() => {
+    const unsubscribe = store.subscribe(() => {
+      setInboxMessages(store.getState());
+    });
+
+    return () => unsubscribe();
+  }, []);
+
   const [message, setMessage] = useState<InboxItem | null>(null);
-  console.log("My Store: ", store.getState());
+
+  const deleteMessage = (messageId: number) => {
+    store.dispatch(inboxActions.deleteMessage(messageId));
+    setInboxMessages(inboxMessages.filter((msg) => msg.id !== messageId));
+  };
 
   const openEmail = (selectedEmail: InboxItem) => {
+    if (!selectedEmail.read) {
+      store.dispatch(inboxActions.markRead(selectedEmail.id));
+      selectedEmail.read = true;
+    }
+
     setMessage(selectedEmail);
   };
+
+  const markUnread = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    messageId: number
+  ) => {
+    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
+    store.dispatch(inboxActions.markUnread(messageId));
+  };
+
+  const markRead = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    messageId: number
+  ) => {
+    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
+    store.dispatch(inboxActions.markRead(messageId));
+  };
+
   return (
     <>
       <h1 className="mb-5">Inbox</h1>
@@ -54,28 +81,47 @@ const Inbox = () => {
         <div className="h-72 overflow-scroll inset-shadow-sm/50 border-b-primary border-b-2">
           <Table hoverable>
             <TableBody className="divide-y">
-              {inbox.map((msg: InboxItem) => {
+              {inboxMessages.map((msg: InboxItem) => {
                 return (
                   <TableRow
                     key={msg.id}
-                    className="bg-white dark:border-gray-700 dark:bg-gray-800"
+                    className={`bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
+                      msg.read ? "italic" : "font-bold"
+                    }`}
                     onClick={() => openEmail(msg)}
                   >
                     <TableCell>
-                      {moment(msg.date).format("MM-DD-yyyy")}
+                      {moment(msg.date).format("MM-DD-yyyy h:MM a")}
                     </TableCell>
-                    <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
+                    <TableCell className="whitespace-nowrap text-gray-900 dark:text-white">
                       {msg.sender}
                     </TableCell>
                     <TableCell>{msg.subject}</TableCell>
                     <TableCell>{msg.message.slice(0, 20) + "..."}</TableCell>
-                    <TableCell>
-                      <a
-                        href="#"
-                        className="font-medium text-cyan-600 hover:underline dark:text-cyan-500"
+                    <TableCell className="flex justify-between">
+                      {msg.read ? (
+                        <button
+                          title="Mark unread"
+                          onClick={(e) => markUnread(e, msg.id)}
+                          className="font-medium text-error hover:underline dark:text-error"
+                        >
+                          <BsEnvelopeArrowDown />
+                        </button>
+                      ) : (
+                        <button
+                          title="Mark read"
+                          onClick={(e) => markRead(e, msg.id)}
+                          className="font-bold text-accent hover:underline dark:text-cyan-500"
+                        >
+                          <BsEnvelopeArrowUpFill fontWeight="fill" />
+                        </button>
+                      )}
+                      <button
+                        onClick={() => deleteMessage(msg.id)}
+                        className="font-medium hover:underline"
                       >
                         <BiTrash color="red" />
-                      </a>
+                      </button>
                     </TableCell>
                   </TableRow>
                 );
@@ -85,7 +131,7 @@ const Inbox = () => {
         </div>
         {message ? (
           <textarea
-            rows={20}
+            rows={10}
             className="w-full border-2 border-primary p-5 mt-3"
             value={message.message}
             readOnly

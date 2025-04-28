@@ -9,6 +9,7 @@
 - ⚡️ [Next.js](https://nextjs.org/) (Turbopack)
 - 🔐 [TypeScript](https://www.typescriptlang.org/)
 - 🎨 [Tailwind CSS](https://tailwindcss.com/) + [Flowbite UI](https://flowbite.com/)
+- 🗄️ [Redux](https://redux.js.org/) for state management
 - 💰 [Plaid](https://plaid.com/) for bank and credit card payments
 - 🧠 Modular architecture with feature-based components
 

@@ -1,25 +1,40 @@
+import { BillowAction } from "@/interfaces/BillowAction";
 import { InboxItem } from "@/interfaces/InboxItem";
 import { InboxAction } from "@/types/InboxAction";
-import { Action, Reducer } from "redux";
-import types from "./actions";
+import { Reducer } from "redux";
+import inboxTypes from "./actionsTypes";
 
-const reducer: Reducer<InboxItem | [], Action<InboxAction>> = (
-  state: InboxItem | [] = [],
-  action: Action<InboxAction>
+const reducer: Reducer<InboxItem[] | [], BillowAction<InboxAction, number>> = (
+  state: InboxItem[] | [] = [],
+  action: BillowAction<InboxAction, number>
 ) => {
   switch (action.type) {
-    case types.ARCHIVE_MESSAGE:
+    case inboxTypes.ARCHIVE_MESSAGE:
       console.log("Message archived!");
       return state;
-    case types.DELETE_MESSAGE:
+    case inboxTypes.DELETE_MESSAGE:
       console.log("Message deleted!");
-      return state;
-    case types.MARK_READ:
+      return state.filter(
+        (message: InboxItem) => (action.payload as number) !== message.id
+      );
+    case inboxTypes.MARK_READ:
       console.log("Message marked read!");
-      return state;
-    case types.MARK_UNREAD:
+      return state.map((message: InboxItem) => {
+        if (action.payload === message.id) {
+          return { ...message, read: true };
+        }
+
+        return message;
+      });
+    case inboxTypes.MARK_UNREAD:
       console.log("Message marked unread!");
-      return state;
+      return state.map((message: InboxItem) => {
+        if (action.payload === message.id) {
+          return { ...message, read: false };
+        }
+
+        return message;
+      });
     default:
       return state;
   }

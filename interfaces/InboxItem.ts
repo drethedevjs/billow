@@ -4,4 +4,5 @@ export interface InboxItem {
   sender: string;
   date: Date;
   message: string;
+  read: boolean; // passed tense (pronounced "red")
 }
