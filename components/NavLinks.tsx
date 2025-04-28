@@ -15,7 +15,11 @@ export const NavLink = ({
 
   return (
     <>
-      <Link href={href} className={path === href ? "text-accent" : ""}>
+      <Link
+        href={href}
+        className={path === href ? "text-accent" : ""}
+        as={path}
+      >
         {children}
       </Link>
 
