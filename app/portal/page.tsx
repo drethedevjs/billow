@@ -1,12 +1,14 @@
 "use client";
 
+import store from "@/components/portal/inbox/store";
+import portalUtils from "@/utils/portalUtils";
 import {
   Sidebar,
   SidebarItem,
   SidebarItemGroup,
   SidebarItems
 } from "flowbite-react";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import Dashboard from "../../components/portal/Dashboard";
 import Inbox from "../../components/portal/inbox/Inbox";
 import Payment from "../../components/portal/Payment";
@@ -15,8 +17,19 @@ import Profile from "../../components/portal/Profile";
 
 const Portal = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [inboxCount, setInboxCount] = useState<string>(
+    store
+      .getState()
+      .filter((msg) => !msg.read)
+      .length.toString()
+  );
 
-  // const firstMenuItem = document.getElementById("first-menu-item");
+  useEffect(() => {
+    const unsubscribe = portalUtils.getInboxNewMessageCount(setInboxCount);
+
+    return () => unsubscribe();
+  }, []);
+
   const selectTab = (tabName: string) => {
     const activeMenuItem = document.getElementsByClassName(
       "active-sidebar-item sidebar-item"
@@ -66,7 +79,7 @@ const Portal = () => {
             <SidebarItem
               id="inbox"
               onClick={() => selectTab("inbox")}
-              label="Coming Soon"
+              label={inboxCount}
               labelColor="dark"
               className="sidebar-item"
             >
