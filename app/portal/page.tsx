@@ -8,7 +8,7 @@ import {
 } from "flowbite-react";
 import { FC, useState } from "react";
 import Dashboard from "../../components/portal/Dashboard";
-import Inbox from "../../components/portal/Inbox";
+import Inbox from "../../components/portal/inbox/Inbox";
 import Payment from "../../components/portal/Payment";
 import PaymentHistory from "../../components/portal/PaymentHistory";
 import Profile from "../../components/portal/Profile";
