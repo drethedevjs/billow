@@ -6,22 +6,24 @@ import { ReactNode } from "react";
 
 export const NavLink = ({
   href,
-  children
+  children,
+  disable = false
 }: {
   href: string;
   children: ReactNode;
+  disable?: boolean;
 }) => {
   const path: string | null = usePathname();
 
   return (
     <>
-      <Link
-        href={href}
-        className={path === href ? "text-accent" : ""}
-        as={path}
-      >
-        {children}
-      </Link>
+      {disable ? (
+        <button className="text-muted cursor-not-allowed">{children}</button>
+      ) : (
+        <Link href={href} className={`${path === href ? "text-accent" : ""}`}>
+          {children}
+        </Link>
+      )}
 
       {/* <NavbarCollapse>
         <NavbarLink href="/">Home</NavbarLink>

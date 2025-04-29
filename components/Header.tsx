@@ -35,10 +35,16 @@ const Header = () => {
       </div>
       <NavbarCollapse>
         <NavLink href="/">Home</NavLink>
-        <NavLink href="/about">About</NavLink>
-        <NavLink href="/faq">FAQ</NavLink>
+        <NavLink href="/about" disable={true}>
+          About
+        </NavLink>
+        <NavLink href="/faq" disable={true}>
+          FAQ
+        </NavLink>
         <NavLink href="/portal">Dashboard</NavLink>
-        <NavLink href="/contact">Contact</NavLink>
+        <NavLink href="/contact" disable={true}>
+          Contact
+        </NavLink>
       </NavbarCollapse>
     </Navbar>
   );
