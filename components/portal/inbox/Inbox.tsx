@@ -11,8 +11,8 @@ import {
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import { BsEnvelopeArrowDown, BsEnvelopeArrowUpFill } from "react-icons/bs";
 import inboxActions from "./actions";
+import EnvelopeIcons from "./icons/EnvelopeIcons";
 import StarIcons from "./icons/StarIcons";
 import store from "./store";
 
@@ -122,23 +122,13 @@ const Inbox = () => {
                         markImportant={markImportant}
                         markUnimportant={markUnimportant}
                       />
-                      {msg.read ? (
-                        <button
-                          title="Mark unread"
-                          onClick={(e) => markUnread(e, msg.id)}
-                          className="font-medium text-error hover:underline dark:text-error"
-                        >
-                          <BsEnvelopeArrowDown />
-                        </button>
-                      ) : (
-                        <button
-                          title="Mark read"
-                          onClick={(e) => markRead(e, msg.id)}
-                          className="font-bold text-accent hover:underline dark:text-cyan-500"
-                        >
-                          <BsEnvelopeArrowUpFill fontWeight="fill" />
-                        </button>
-                      )}
+                      <EnvelopeIcons
+                        id={msg.id}
+                        read={msg.read}
+                        markRead={markRead}
+                        markUnread={markUnread}
+                      />
+
                       <button
                         onClick={() => deleteMessage(msg.id)}
                         className="font-medium hover:underline"
