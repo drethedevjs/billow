@@ -3,4 +3,6 @@ export default interface InboxActions {
   ARCHIVE_MESSAGE: string;
   MARK_READ: string;
   MARK_UNREAD: string;
+  MARK_IMPORTANT: string;
+  MARK_UNIMPORTANT: string;
 }

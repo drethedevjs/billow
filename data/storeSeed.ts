@@ -8,7 +8,9 @@ function generateInboxItems(): InboxItem[] {
     sender: faker.internet.email(),
     date: faker.date.recent({ days: 30 }),
     message: faker.lorem.paragraph(),
-    read: false
+    read: false,
+    archived: false,
+    important: false
   })).sort((a, b) => b.date.getTime() - a.date.getTime());
 }
 

@@ -26,6 +26,24 @@ const reducer: Reducer<InboxItem[] | [], BillowAction<InboxAction, number>> = (
 
         return message;
       });
+    case inboxTypes.MARK_IMPORTANT:
+      console.log("Message marked important!");
+      return state.map((message: InboxItem) => {
+        if (action.payload === message.id) {
+          return { ...message, important: true };
+        }
+
+        return message;
+      });
+    case inboxTypes.MARK_UNIMPORTANT:
+      console.log("Message marked unimportant!");
+      return state.map((message: InboxItem) => {
+        if (action.payload === message.id) {
+          return { ...message, important: false };
+        }
+
+        return message;
+      });
     case inboxTypes.MARK_UNREAD:
       console.log("Message marked unread!");
       return state.map((message: InboxItem) => {

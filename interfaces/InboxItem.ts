@@ -5,4 +5,6 @@ export interface InboxItem {
   date: Date;
   message: string;
   read: boolean; // passed tense (pronounced "red")
+  archived: boolean;
+  important: boolean;
 }

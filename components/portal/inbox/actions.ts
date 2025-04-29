@@ -14,6 +14,18 @@ const inboxActions = {
       payload: messageId
     };
   },
+  markImportant: (messageId: number) => {
+    return {
+      type: inboxTypes.MARK_IMPORTANT as InboxAction,
+      payload: messageId
+    };
+  },
+  markUnimportant: (messageId: number) => {
+    return {
+      type: inboxTypes.MARK_UNIMPORTANT as InboxAction,
+      payload: messageId
+    };
+  },
   deleteMessage: (messageId: number) => {
     return {
       type: inboxTypes.DELETE_MESSAGE as InboxAction,

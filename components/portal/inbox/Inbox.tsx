@@ -13,6 +13,7 @@ import { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
 import { BsEnvelopeArrowDown, BsEnvelopeArrowUpFill } from "react-icons/bs";
 import inboxActions from "./actions";
+import StarIcons from "./icons/StarIcons";
 import store from "./store";
 
 const Inbox = () => {
@@ -60,6 +61,22 @@ const Inbox = () => {
     store.dispatch(inboxActions.markRead(messageId));
   };
 
+  const markImportant = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    messageId: number
+  ) => {
+    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
+    store.dispatch(inboxActions.markImportant(messageId));
+  };
+
+  const markUnimportant = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    messageId: number
+  ) => {
+    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
+    store.dispatch(inboxActions.markUnimportant(messageId));
+  };
+
   return (
     <>
       <h1 className="mb-5">Inbox</h1>
@@ -85,9 +102,9 @@ const Inbox = () => {
                 return (
                   <TableRow
                     key={msg.id}
-                    className={`bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
+                    className={` bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
                       msg.read ? "italic" : "font-bold"
-                    }`}
+                    } ${msg.important ? "!bg-yellow-100" : ""}`}
                     onClick={() => openEmail(msg)}
                   >
                     <TableCell>
@@ -99,6 +116,12 @@ const Inbox = () => {
                     <TableCell>{msg.subject}</TableCell>
                     <TableCell>{msg.message.slice(0, 20) + "..."}</TableCell>
                     <TableCell className="flex justify-between">
+                      <StarIcons
+                        id={msg.id}
+                        important={msg.important}
+                        markImportant={markImportant}
+                        markUnimportant={markUnimportant}
+                      />
                       {msg.read ? (
                         <button
                           title="Mark unread"
