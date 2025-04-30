@@ -1,6 +1,7 @@
 "use client";
 
-import store from "@/components/portal/inbox/store";
+import store from "@/app/store/configureStore";
+import { InboxItem } from "@/interfaces/InboxItem";
 import portalUtils from "@/utils/portalUtils";
 import {
   Sidebar,
@@ -20,7 +21,7 @@ const Portal = () => {
   const [inboxCount, setInboxCount] = useState<string>(
     store
       .getState()
-      .filter((msg) => !msg.read)
+      .filter((msg: InboxItem) => !msg.read)
       .length.toString()
   );
 

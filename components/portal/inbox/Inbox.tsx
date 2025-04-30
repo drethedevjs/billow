@@ -1,4 +1,5 @@
 "use client";
+import { inboxActions } from "@/app/store/inbox";
 import { InboxItem } from "@/interfaces/InboxItem";
 import {
   Table,
@@ -11,10 +12,9 @@ import {
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import inboxActions from "./actions";
+import store from "../../../app/store/configureStore";
 import EnvelopeIcons from "./icons/EnvelopeIcons";
 import StarIcons from "./icons/StarIcons";
-import store from "./store";
 
 const Inbox = () => {
   const [inboxMessages, setInboxMessages] = useState<InboxItem[]>(

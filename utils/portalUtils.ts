@@ -1,4 +1,4 @@
-import store from "@/components/portal/inbox/store";
+import store from "@/app/store/configureStore";
 
 const portalUtils = {
   getInboxNewMessageCount: (setInboxCount: (storeLength: string) => void) => {
