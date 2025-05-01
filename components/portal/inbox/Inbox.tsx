@@ -1,6 +1,6 @@
 "use client";
-import { inboxActions } from "@/app/store/inbox";
 import { InboxItem } from "@/interfaces/InboxItem";
+import { inboxSlice } from "@/store/inbox";
 import {
   Table,
   TableBody,
@@ -10,71 +10,30 @@ import {
   TableRow
 } from "flowbite-react";
 import moment from "moment";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { BiTrash } from "react-icons/bi";
-import store from "../../../app/store/configureStore";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store/configureStore";
 import EnvelopeIcons from "./icons/EnvelopeIcons";
 import StarIcons from "./icons/StarIcons";
 
 const Inbox = () => {
-  const [inboxMessages, setInboxMessages] = useState<InboxItem[]>(
-    store.getState()
-  );
-
-  useEffect(() => {
-    const unsubscribe = store.subscribe(() => {
-      setInboxMessages(store.getState());
-    });
-
-    return () => unsubscribe();
-  }, []);
+  const dispatch = useDispatch();
+  const inboxMessages = useSelector((state: RootState) => state.inbox);
+  const { deleteMessage, markRead } = inboxSlice.actions;
 
   const [message, setMessage] = useState<InboxItem | null>(null);
 
-  const deleteMessage = (messageId: number) => {
-    store.dispatch(inboxActions.deleteMessage(messageId));
-    setInboxMessages(inboxMessages.filter((msg) => msg.id !== messageId));
+  const deleteMsg = (messageId: number) => {
+    dispatch(deleteMessage(messageId));
   };
 
   const openEmail = (selectedEmail: InboxItem) => {
     if (!selectedEmail.read) {
-      store.dispatch(inboxActions.markRead(selectedEmail.id));
-      selectedEmail.read = true;
+      dispatch(markRead(selectedEmail.id));
     }
 
     setMessage(selectedEmail);
-  };
-
-  const markUnread = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    messageId: number
-  ) => {
-    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
-    store.dispatch(inboxActions.markUnread(messageId));
-  };
-
-  const markRead = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    messageId: number
-  ) => {
-    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
-    store.dispatch(inboxActions.markRead(messageId));
-  };
-
-  const markImportant = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    messageId: number
-  ) => {
-    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
-    store.dispatch(inboxActions.markImportant(messageId));
-  };
-
-  const markUnimportant = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    messageId: number
-  ) => {
-    e.stopPropagation(); // Allow users to click icon without showing the message in the viewer.
-    store.dispatch(inboxActions.markUnimportant(messageId));
   };
 
   return (
@@ -98,47 +57,51 @@ const Inbox = () => {
         <div className="h-72 overflow-scroll inset-shadow-sm/50 border-b-primary border-b-2">
           <Table hoverable>
             <TableBody className="divide-y">
-              {inboxMessages.map((msg: InboxItem) => {
-                return (
-                  <TableRow
-                    key={msg.id}
-                    className={` bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
-                      msg.read ? "italic" : "font-bold"
-                    } ${msg.important ? "!bg-yellow-100" : ""}`}
-                    onClick={() => openEmail(msg)}
-                  >
-                    <TableCell>
-                      {moment(msg.date).format("MM-DD-yyyy h:MM a")}
-                    </TableCell>
-                    <TableCell className="whitespace-nowrap text-gray-900 dark:text-white">
-                      {msg.sender}
-                    </TableCell>
-                    <TableCell>{msg.subject}</TableCell>
-                    <TableCell>{msg.message.slice(0, 20) + "..."}</TableCell>
-                    <TableCell className="flex justify-between">
-                      <StarIcons
-                        id={msg.id}
-                        important={msg.important}
-                        markImportant={markImportant}
-                        markUnimportant={markUnimportant}
-                      />
-                      <EnvelopeIcons
-                        id={msg.id}
-                        read={msg.read}
-                        markRead={markRead}
-                        markUnread={markUnread}
-                      />
-
-                      <button
-                        onClick={() => deleteMessage(msg.id)}
-                        className="font-medium hover:underline"
+              {!inboxMessages.length ? (
+                <TableRow className="p-10">
+                  <TableCell>You have no messages in your inbox.</TableCell>
+                </TableRow>
+              ) : (
+                inboxMessages.map((msg: InboxItem) => {
+                  return (
+                    <TableRow
+                      key={msg.id}
+                      className={` bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
+                        msg.read ? "italic" : "font-bold"
+                      } ${msg.important ? "!bg-yellow-100" : ""}`}
+                    >
+                      <TableCell onClick={() => openEmail(msg)}>
+                        {moment(new Date(msg.date)).format(
+                          "MMMM Do YYYY, h:mm a"
+                        )}
+                      </TableCell>
+                      <TableCell
+                        onClick={() => openEmail(msg)}
+                        className="whitespace-nowrap text-gray-900 dark:text-white"
                       >
-                        <BiTrash color="red" />
-                      </button>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
+                        {msg.sender}
+                      </TableCell>
+                      <TableCell onClick={() => openEmail(msg)}>
+                        {msg.subject}
+                      </TableCell>
+                      <TableCell onClick={() => openEmail(msg)}>
+                        {msg.message.slice(0, 20) + "..."}
+                      </TableCell>
+                      <TableCell className="flex justify-between">
+                        <StarIcons id={msg.id} important={msg.important} />
+                        <EnvelopeIcons id={msg.id} read={msg.read} />
+
+                        <button
+                          onClick={() => deleteMsg(msg.id)}
+                          className="font-medium hover:underline"
+                        >
+                          <BiTrash color="red" />
+                        </button>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
+              )}
             </TableBody>
           </Table>
         </div>

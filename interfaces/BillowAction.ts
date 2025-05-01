@@ -1,6 +1,6 @@
 import { Action } from "redux";
 
-export interface BillowAction<TAction, TPayload> extends Action {
-  type: TAction;
+export interface BillowAction<TPayload> extends Action {
+  type: string;
   payload: TPayload;
 }

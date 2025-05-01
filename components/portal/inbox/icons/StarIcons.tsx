@@ -1,22 +1,16 @@
+import { inboxSlice } from "@/store/inbox";
 import { BsBookmarkStar, BsBookmarkStarFill } from "react-icons/bs";
+import { useDispatch } from "react-redux";
 
-const StarIcons = ({
-  id,
-  important,
-  markImportant,
-  markUnimportant
-}: {
-  id: number;
-  important: boolean;
-  markImportant: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
-  markUnimportant: (e: React.MouseEvent<HTMLButtonElement>, id: number) => void;
-}) => {
+const StarIcons = ({ id, important }: { id: number; important: boolean }) => {
+  const dispatch = useDispatch();
+  const { markImportant, markUnimportant } = inboxSlice.actions;
   return (
     <>
       {important ? (
         <button
           title="Mark unimportant"
-          onClick={(e) => markUnimportant(e, id)}
+          onClick={() => dispatch(markUnimportant(id))}
           className="font-medium text-error hover:underline dark:text-error"
         >
           <BsBookmarkStarFill />
@@ -24,7 +18,7 @@ const StarIcons = ({
       ) : (
         <button
           title="Mark important"
-          onClick={(e) => markImportant(e, id)}
+          onClick={() => dispatch(markImportant(id))}
           className="font-bold text-accent hover:underline dark:text-cyan-500"
         >
           <BsBookmarkStar fontWeight="fill" />
