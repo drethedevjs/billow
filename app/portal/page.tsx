@@ -1,15 +1,14 @@
 "use client";
 
-import store from "@/app/store/configureStore";
-import { InboxItem } from "@/interfaces/InboxItem";
-import portalUtils from "@/utils/portalUtils";
+import { RootState } from "@/store/configureStore";
 import {
   Sidebar,
   SidebarItem,
   SidebarItemGroup,
   SidebarItems
 } from "flowbite-react";
-import { FC, useEffect, useState } from "react";
+import { FC, useState } from "react";
+import { useSelector } from "react-redux";
 import Dashboard from "../../components/portal/Dashboard";
 import Inbox from "../../components/portal/inbox/Inbox";
 import Payment from "../../components/portal/Payment";
@@ -18,18 +17,9 @@ import Profile from "../../components/portal/Profile";
 
 const Portal = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
-  const [inboxCount, setInboxCount] = useState<string>(
-    store
-      .getState()
-      .filter((msg: InboxItem) => !msg.read)
-      .length.toString()
+  const unreadMessageCount = useSelector((state: RootState) =>
+    state.inbox.filter((msg) => !msg.read).length.toString()
   );
-
-  useEffect(() => {
-    const unsubscribe = portalUtils.getInboxNewMessageCount(setInboxCount);
-
-    return () => unsubscribe();
-  }, []);
 
   const selectTab = (tabName: string) => {
     const activeMenuItem = document.getElementsByClassName(
@@ -80,7 +70,7 @@ const Portal = () => {
             <SidebarItem
               id="inbox"
               onClick={() => selectTab("inbox")}
-              label={inboxCount}
+              label={unreadMessageCount}
               labelColor="dark"
               className="sidebar-item"
             >
@@ -104,7 +94,9 @@ const Portal = () => {
             >
               Payment History
             </SidebarItem>
-            <SidebarItem className="bg-error text-white">Sign Out</SidebarItem>
+            <SidebarItem className="border border-error text-error hover:bg-error hover:text-white transition-colors">
+              Sign Out
+            </SidebarItem>
           </SidebarItemGroup>
         </SidebarItems>
       </Sidebar>
