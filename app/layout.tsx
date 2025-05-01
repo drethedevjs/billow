@@ -1,3 +1,4 @@
+import Providers from "@/store/Providers";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import Footer from "../components/Footer";
@@ -31,7 +32,7 @@ export default function RootLayout({
       >
         <Header />
         <main className="container mx-auto min-h-screen flex flex-col">
-          {children}
+          <Providers>{children}</Providers>
         </main>
         <Footer />
       </body>
