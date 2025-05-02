@@ -1,4 +1,4 @@
-export type ServiceName =
+export type ServiceType =
   | "Water"
   | "Sewage"
   | "Gas"
