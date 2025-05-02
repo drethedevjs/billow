@@ -1,7 +1,8 @@
 "use client";
 import { accountData as data } from "@/data/accountData";
-import { AccountData } from "@/interfaces/AccountData";
-import Location from "@/interfaces/Location";
+import { AccountData } from "@/interfaces/account/AccountData";
+import Location from "@/interfaces/account/Location";
+import type { RootState } from "@/store/configureStore";
 import {
   Button,
   Table,
@@ -13,10 +14,13 @@ import {
 } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
+import { useSelector } from "react-redux";
 
 const Dashboard = () => {
   const whichAccount: number = 4;
-  const accountData: AccountData = data[whichAccount];
+  const accountData: AccountData = useSelector<RootState, AccountData>(
+    (s) => s.account[whichAccount]
+  );
 
   const [location, setLocation] = useState<Location>(
     data[whichAccount].locations[0]
@@ -62,16 +66,9 @@ const Dashboard = () => {
         {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
       </p>
       <hr></hr>
-      <div className="flex flex-row mt-5">
-        <div className="w-full md:w-1/2 text-center">
-          <h3>Account Number</h3>
-        </div>
-        <div className="w-full md:w-1/2 text-center">
-          <h3>Services</h3>
-        </div>
-      </div>
-      <div className="flex flex-row mt-5">
-        <div className="w-full md:w-1/2">
+      <div className="flex xl:flex-row flex-col mt-5">
+        <div className="w-full xl:w-1/2">
+          <h3 className="text-center mb-4">Account Number</h3>
           <ul className="bg-primary">
             {accountData.locations.map((l) => {
               return (
@@ -87,8 +84,9 @@ const Dashboard = () => {
             })}
           </ul>
         </div>
-        <div className="w-full md:w-1/2">
-          <div className="overflow-x-auto px-4 pb-5">
+        <div className="w-full xl:w-1/2">
+          <h3 className="text-center mb-4">Services</h3>
+          <div className="px-4 pb-5">
             <Table>
               <TableHead>
                 <TableRow>
@@ -101,18 +99,18 @@ const Dashboard = () => {
                   return (
                     <React.Fragment key={idx}>
                       <TableRow
-                        key={s.name}
+                        key={s.type}
                         className="bg-white dark:border-gray-700 dark:bg-gray-800"
                       >
                         <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-                          {s.name}
+                          {s.type}
                         </TableCell>
                         <TableCell>${s.price.toFixed(2)}</TableCell>
                       </TableRow>
                       {s.penalty > 0 ? (
                         <tr
-                          key={`${s.name}-penalty`}
-                          className="bg-error dark:border-gray-700 dark:bg-gray-800 text-white h-6"
+                          key={`${s.type}-penalty`}
+                          className="bg-error dark:border-gray-700  text-white h-6"
                         >
                           <td className="whitespace-nowrap font-medium text-right">
                             Penalty
