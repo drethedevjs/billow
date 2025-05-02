@@ -1,7 +1,8 @@
-import { AccountData } from "@/interfaces/AccountData";
+import { AccountData } from "@/interfaces/account/AccountData";
 
 export const accountData: AccountData[] = [
   {
+    id: 1,
     utilityCompanyName: "City Waterworks",
     accountHolderFirstName: "Jane",
     accountHolderLastName: "Doe",
@@ -16,8 +17,8 @@ export const accountData: AccountData[] = [
           postal: "29201"
         },
         services: [
-          { name: "Water", price: 45.6, penalty: 0 },
-          { name: "Sewage", price: 23.1, penalty: 5.0 }
+          { id: 1, type: "Water", price: 45.6, penalty: 0 },
+          { id: 2, type: "Sewage", price: 23.1, penalty: 5.0 }
         ]
       },
       {
@@ -29,11 +30,12 @@ export const accountData: AccountData[] = [
           state: "SC",
           postal: "29607"
         },
-        services: [{ name: "Recycling", price: 5.0, penalty: 0 }]
+        services: [{ id: 3, type: "Recycling", price: 5.0, penalty: 0 }]
       }
     ]
   },
   {
+    id: 2,
     utilityCompanyName: "Metro Utilities",
     accountHolderFirstName: "Carlos",
     accountHolderLastName: "Ramirez",
@@ -48,8 +50,8 @@ export const accountData: AccountData[] = [
           postal: "31401"
         },
         services: [
-          { name: "Water", price: 32.5, penalty: 10.0 },
-          { name: "Gas", price: 29.99, penalty: 2.5 }
+          { id: 4, type: "Water", price: 32.5, penalty: 10.0 },
+          { id: 5, type: "Gas", price: 29.99, penalty: 2.5 }
         ]
       },
       {
@@ -61,11 +63,12 @@ export const accountData: AccountData[] = [
           state: "GA",
           postal: "30305"
         },
-        services: [{ name: "Recycling", price: 4.25, penalty: 0 }]
+        services: [{ id: 6, type: "Recycling", price: 4.25, penalty: 0 }]
       }
     ]
   },
   {
+    id: 3,
     utilityCompanyName: "Sunstate Utility Services",
     accountHolderFirstName: "Aisha",
     accountHolderLastName: "Nguyen",
@@ -80,8 +83,8 @@ export const accountData: AccountData[] = [
           postal: "30303"
         },
         services: [
-          { name: "Gas", price: 36.45, penalty: 3.25 },
-          { name: "Miscellaneous", price: 3.1, penalty: 0 }
+          { id: 7, type: "Gas", price: 36.45, penalty: 3.25 },
+          { id: 8, type: "Miscellaneous", price: 3.1, penalty: 0 }
         ]
       },
       {
@@ -93,11 +96,12 @@ export const accountData: AccountData[] = [
           state: "GA",
           postal: "31520"
         },
-        services: [{ name: "Sewage", price: 19.8, penalty: 1.75 }]
+        services: [{ id: 9, type: "Sewage", price: 19.8, penalty: 1.75 }]
       }
     ]
   },
   {
+    id: 4,
     utilityCompanyName: "Evergreen Municipal Services",
     accountHolderFirstName: "Liam",
     accountHolderLastName: "Chen",
@@ -112,14 +116,15 @@ export const accountData: AccountData[] = [
           postal: "29403"
         },
         services: [
-          { name: "Water", price: 41.25, penalty: 0 },
-          { name: "Recycling", price: 6.0, penalty: 0 },
-          { name: "Sewage", price: 18.5, penalty: 2.0 }
+          { id: 10, type: "Water", price: 41.25, penalty: 0 },
+          { id: 11, type: "Recycling", price: 6.0, penalty: 0 },
+          { id: 12, type: "Sewage", price: 18.5, penalty: 2.0 }
         ]
       }
     ]
   },
   {
+    id: 5,
     utilityCompanyName: "Northern Utility Co.",
     accountHolderFirstName: "Emma",
     accountHolderLastName: "Khan",
@@ -134,8 +139,8 @@ export const accountData: AccountData[] = [
           postal: "30901"
         },
         services: [
-          { name: "Gas", price: 40.3, penalty: 4.0 },
-          { name: "Water", price: 28.75, penalty: 0 }
+          { id: 13, type: "Gas", price: 40.3, penalty: 4.0 },
+          { id: 14, type: "Water", price: 28.75, penalty: 0 }
         ]
       },
       {
@@ -147,7 +152,7 @@ export const accountData: AccountData[] = [
           state: "GA",
           postal: "31210"
         },
-        services: [{ name: "Miscellaneous", price: 8.2, penalty: 0 }]
+        services: [{ id: 15, type: "Miscellaneous", price: 8.2, penalty: 0 }]
       }
     ]
   }
