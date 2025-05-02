@@ -13,12 +13,11 @@ const PaymentButton = ({
   return (
     <>
       {processing ? (
-        <Button className="mt-3 w-full focus:!ring-0 bg-white hover:bg-white border border-accent text-accent transition-colors dark:bg-accent dark:hover:bg-slate dark:hover:text-accent cursor-not-allowed">
+        <Button className="mt-3 w-full focus:!ring-0 bg-white hover:bg-white border border-accent text-accent dark:bg-accent dark:hover:bg-slate dark:hover:text-accent cursor-not-allowed">
           <Spinner
             aria-label="Spinner button example"
             size="sm"
-            color="warning"
-            light
+            color="failure"
           />
           <span className="pl-3">Payment Processing</span>
         </Button>
