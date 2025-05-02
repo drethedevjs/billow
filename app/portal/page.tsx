@@ -47,8 +47,11 @@ const Portal = () => {
   };
 
   return (
-    <div className="p-10 flex flex-row">
-      <Sidebar aria-label="Default sidebar example">
+    <div className="py-10 flex md:flex-row flex-col">
+      <Sidebar
+        aria-label="Default sidebar example"
+        className="w-full xl:w-auto"
+      >
         <SidebarItems>
           <SidebarItemGroup>
             <SidebarItem
