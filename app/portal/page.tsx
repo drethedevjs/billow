@@ -11,7 +11,6 @@ import { FC, useState } from "react";
 import { useSelector } from "react-redux";
 import Dashboard from "../../components/portal/Dashboard";
 import Inbox from "../../components/portal/inbox/Inbox";
-import Payment from "../../components/portal/Payment";
 import PaymentHistory from "../../components/portal/PaymentHistory";
 import Profile from "../../components/portal/Profile";
 
@@ -36,13 +35,13 @@ const Portal = () => {
   const renderContent = () => {
     const menuMap: Record<string, FC> = {
       dashboard: Dashboard,
-      payment: Payment,
       paymentHistory: PaymentHistory,
       profile: Profile,
       inbox: Inbox
     };
 
     const ActiveComponent = menuMap[activeTab] ?? Dashboard;
+
     return <ActiveComponent />;
   };
 
@@ -60,15 +59,6 @@ const Portal = () => {
               onClick={() => selectTab("dashboard")}
             >
               Dashboard
-            </SidebarItem>
-            <SidebarItem
-              id="payment"
-              onClick={() => selectTab("payment")}
-              label="Coming Soon"
-              labelColor="dark"
-              className="sidebar-item"
-            >
-              Pay Bill
             </SidebarItem>
             <SidebarItem
               id="inbox"
