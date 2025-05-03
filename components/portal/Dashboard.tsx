@@ -112,7 +112,7 @@ const Dashboard = () => {
       .reduce((prev, current) => prev + current, 0)
       .toFixed(2);
 
-    return Number(total);
+    return total;
   }, [servicePaymentAmounts]);
 
   return (
@@ -206,7 +206,9 @@ const Dashboard = () => {
                   <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                     Total Due:
                   </TableCell>
-                  <TableCell className="text-primary">${totalDue}</TableCell>
+                  <TableCell className="text-primary dark:text-error">
+                    ${totalDue}
+                  </TableCell>
                   <TableCell className="text-accent">
                     ${calcTotalPayment}
                   </TableCell>
