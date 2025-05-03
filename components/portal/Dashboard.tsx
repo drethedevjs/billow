@@ -1,7 +1,5 @@
 "use client";
-import { accountData as data } from "@/data/accountData";
 import { AccountData } from "@/interfaces/account/AccountData";
-import Location from "@/interfaces/account/Location";
 import Service from "@/interfaces/account/Service";
 import type { RootState } from "@/store/configureStore";
 import {
@@ -22,13 +20,8 @@ const Dashboard = () => {
   const accountData: AccountData = useSelector<RootState, AccountData>(
     (s) => s.account[whichAccount]
   );
-
-  const [location, setLocation] = useState<Location>(
-    data[whichAccount].locations[0]
-  );
-
+  const [whichLocation, setWhichLocation] = useState<number>(0);
   const [processing, setProcessing] = useState<boolean>(false);
-
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
     Record<string, number>
   >({});
@@ -53,7 +46,9 @@ const Dashboard = () => {
   ): void => {
     const amount = Number(e.target.value);
 
-    const service = location.services.find((s) => s.type === type);
+    const service = accountData.locations[whichLocation].services.find(
+      (s) => s.type === type
+    );
     if (!service) return;
 
     if (service.price < amount) {
@@ -74,18 +69,14 @@ const Dashboard = () => {
   }, []);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const selectLocation = (e: any, accountNumber: number) => {
+  const selectLocation = (e: any, locationIdx: number) => {
     setServicePaymentAmounts({ "": 0 });
     const activeAccountEl = document.getElementsByClassName(
       "bg-accent account-number"
     );
     activeAccountEl[0]?.classList.remove("bg-accent");
     e.target?.classList.add("bg-accent");
-
-    const loc = accountData.locations.find(
-      (l) => l.accountNumber === accountNumber
-    );
-    setLocation(loc!);
+    setWhichLocation(locationIdx);
   };
 
   const processPayment = () => {
@@ -93,17 +84,18 @@ const Dashboard = () => {
 
     setTimeout(() => {
       setProcessing(false);
+      setServicePaymentAmounts({});
     }, 3000);
   };
 
   const totalDue = useMemo(() => {
-    return location.services
+    return accountData.locations[whichLocation].services
       .reduce(
         (acc, currentValue) => acc + currentValue.price + currentValue.penalty,
         0
       )
       .toFixed(2);
-  }, [location.services]);
+  }, [accountData.locations, whichLocation]);
 
   const calcTotalPayment = useMemo(() => {
     const paymentAmounts = Object.values(servicePaymentAmounts);
@@ -132,12 +124,12 @@ const Dashboard = () => {
         <div className="w-full xl:w-1/2">
           <h3 className="text-center mb-4">Account Number</h3>
           <ul className="bg-primary">
-            {accountData.locations.map((l) => {
+            {accountData.locations.map((l, idx) => {
               return (
                 <li
                   key={l.accountNumber}
                   id={l.accountNumber.toString()}
-                  onClick={(e) => selectLocation(e, l.accountNumber)}
+                  onClick={(e) => selectLocation(e, idx)}
                   className="border-b-2 text-center p-3 text-white account-number"
                 >
                   {l.accountNumber} | {l.address.address1}
@@ -150,15 +142,15 @@ const Dashboard = () => {
           <h3 className="text-center mb-4">Services</h3>
           <div className="px-4 pb-5">
             <Table>
-              <TableHead>
-                <TableRow>
+              <TableHead className="dark:bg-accent">
+                <TableRow className="dark:!bg-accent dark:text-white">
                   <TableHeadCell>Utility</TableHeadCell>
                   <TableHeadCell>Cost</TableHeadCell>
                   <TableHeadCell>Payment</TableHeadCell>
                 </TableRow>
               </TableHead>
               <TableBody className="divide-y">
-                {location.services.map((s, idx) => {
+                {accountData.locations[whichLocation].services.map((s, idx) => {
                   return (
                     <React.Fragment key={idx}>
                       <TableRow
@@ -219,6 +211,8 @@ const Dashboard = () => {
               processing={processing}
               processPayment={processPayment}
               calcTotalPayment={calcTotalPayment}
+              location={accountData.locations[whichLocation]}
+              servicePaymentAmounts={servicePaymentAmounts}
             />
           </div>
         </div>

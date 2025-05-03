@@ -1,15 +1,36 @@
+import Location from "@/interfaces/account/Location";
+import userAccountSlice from "@/store/userAccount";
 import { Button, Spinner } from "flowbite-react";
 import { BiDollarCircle } from "react-icons/bi";
+import { useDispatch } from "react-redux";
 
 const PaymentButton = ({
   processing,
   processPayment,
-  calcTotalPayment
+  calcTotalPayment,
+  location,
+  servicePaymentAmounts
 }: {
   processing: boolean;
   processPayment: () => void;
   calcTotalPayment: string;
+  location: Location;
+  servicePaymentAmounts: Record<string, number>;
 }) => {
+  const { payBill } = userAccountSlice.actions;
+  const dispatch = useDispatch();
+  const pay = () => {
+    Object.keys(servicePaymentAmounts).forEach((serviceType) => {
+      dispatch(
+        payBill({
+          accountNumber: location.accountNumber,
+          serviceName: serviceType,
+          payment: servicePaymentAmounts[serviceType]
+        })
+      );
+    });
+    processPayment();
+  };
   return (
     <>
       {processing ? (
@@ -23,7 +44,7 @@ const PaymentButton = ({
         </Button>
       ) : (
         <Button
-          onClick={processPayment}
+          onClick={pay}
           className="mt-3 w-full bg-primary focus:!ring-0 hover:bg-accent transition-colors dark:bg-accent dark:hover:bg-slate dark:hover:text-accent disabled:bg-muted"
           disabled={Number(calcTotalPayment) === 0}
         >
