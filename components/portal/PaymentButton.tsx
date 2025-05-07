@@ -5,14 +5,14 @@ import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 
 const PaymentButton = ({
-  processing,
-  processPayment,
+  isProcessing,
+  runMockFunction,
   calcTotalPayment,
   location,
   servicePaymentAmounts
 }: {
-  processing: boolean;
-  processPayment: () => void;
+  isProcessing: boolean;
+  runMockFunction: (func: () => void) => void;
   calcTotalPayment: string;
   location: Location;
   servicePaymentAmounts: Record<string, number>;
@@ -20,20 +20,23 @@ const PaymentButton = ({
   const { payBill } = userAccountSlice.actions;
   const dispatch = useDispatch();
   const pay = () => {
-    Object.keys(servicePaymentAmounts).forEach((serviceType) => {
-      dispatch(
-        payBill({
-          accountNumber: location.accountNumber,
-          serviceName: serviceType,
-          payment: servicePaymentAmounts[serviceType]
-        })
-      );
-    });
-    processPayment();
+    const processPayment = () => {
+      Object.keys(servicePaymentAmounts).forEach((serviceType) => {
+        dispatch(
+          payBill({
+            accountNumber: location.accountNumber,
+            serviceName: serviceType,
+            payment: servicePaymentAmounts[serviceType]
+          })
+        );
+      });
+    };
+    runMockFunction(processPayment);
   };
+
   return (
     <>
-      {processing ? (
+      {isProcessing ? (
         <Button className="mt-3 w-full focus:!ring-0 bg-white hover:bg-white border border-accent text-accent dark:bg-white dark:hover:bg-white dark:hover:text-accent cursor-not-allowed">
           <Spinner
             aria-label="Spinner button example"

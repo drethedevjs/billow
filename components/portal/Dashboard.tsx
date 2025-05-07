@@ -51,12 +51,13 @@ const Dashboard = () => {
     );
     if (!service) return;
 
-    if (service.price < amount) {
+    if (amount > service.price) {
       const mostCustomerCanPay = changeToMostPrice(type, service);
       setServicePaymentAmounts((prev) => ({
         ...prev,
         [type]: mostCustomerCanPay
       }));
+
       return;
     }
 
@@ -79,10 +80,11 @@ const Dashboard = () => {
     setWhichLocation(locationIdx);
   };
 
-  const processPayment = () => {
+  const runMockFunc = (mockFunction: () => void) => {
     setProcessing(true);
 
     setTimeout(() => {
+      mockFunction();
       setProcessing(false);
       setServicePaymentAmounts({});
     }, 3000);
@@ -208,8 +210,8 @@ const Dashboard = () => {
               </TableBody>
             </Table>
             <PaymentButton
-              processing={processing}
-              processPayment={processPayment}
+              isProcessing={processing}
+              runMockFunction={runMockFunc}
               calcTotalPayment={calcTotalPayment}
               location={accountData.locations[whichLocation]}
               servicePaymentAmounts={servicePaymentAmounts}
