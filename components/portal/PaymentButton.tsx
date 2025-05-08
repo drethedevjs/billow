@@ -1,5 +1,6 @@
 import Location from "@/interfaces/account/Location";
 import userAccountSlice from "@/store/userAccount";
+import { serviceTypes } from "@/types/ServiceType";
 import { Button, Spinner } from "flowbite-react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
@@ -19,6 +20,7 @@ const PaymentButton = ({
 }) => {
   const { payBill } = userAccountSlice.actions;
   const dispatch = useDispatch();
+
   const pay = () => {
     const processPayment = () => {
       Object.keys(servicePaymentAmounts).forEach((serviceType) => {
@@ -30,8 +32,21 @@ const PaymentButton = ({
           })
         );
       });
+
+      clearPaymentAmountInputs();
     };
+
     runMockFunction(processPayment);
+  };
+
+  const clearPaymentAmountInputs = () => {
+    for (const st of serviceTypes) {
+      const input = document.getElementById(
+        st.toLowerCase()
+      ) as HTMLInputElement;
+
+      if (input) input.value = "0";
+    }
   };
 
   return (
