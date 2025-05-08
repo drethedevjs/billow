@@ -38,7 +38,18 @@ const userAccountSlice = createSlice({
 
       if (!service) return;
 
-      service.price = service?.price - action.payload.payment;
+      let payment: number = action.payload.payment;
+      if (service.penalty) {
+        if (service.penalty < payment) {
+          payment = payment - service.penalty;
+          service.penalty = 0;
+        } else {
+          service.penalty = service.penalty - payment;
+          return;
+        }
+      }
+
+      service.price = service.price - payment;
     }
   }
 });
