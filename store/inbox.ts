@@ -8,7 +8,6 @@ export const inboxSlice = createSlice({
   reducers: {
     markRead(state, action: BillowAction<number>) {
       const idx = state.findIndex((msg) => msg.id === action.payload);
-      console.log("markRead ran");
       state[idx].read = true;
     },
 
