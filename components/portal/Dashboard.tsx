@@ -31,7 +31,9 @@ const Dashboard = () => {
       type.toLowerCase()
     ) as HTMLInputElement;
 
-    const mostCustomerCanPay = service.penalty + service.price;
+    const mostCustomerCanPay = Number(
+      (service.penalty + service.price).toFixed(2)
+    );
 
     if (element) {
       element.value = mostCustomerCanPay.toString();
