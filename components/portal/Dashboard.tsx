@@ -132,7 +132,7 @@ const Dashboard = () => {
                   key={l.accountNumber}
                   id={l.accountNumber.toString()}
                   onClick={(e) => selectLocation(e, idx)}
-                  className="border-b-2 text-center p-3 text-white account-number"
+                  className="border-b-2 text-center p-3 text-white account-number cursor-pointer"
                 >
                   {l.accountNumber} | {l.address.address1}
                 </li>
@@ -166,6 +166,7 @@ const Dashboard = () => {
                         <TableCell>
                           <TextInput
                             id={s.type.toLowerCase()}
+                            className="paymentAmountInput"
                             type="number"
                             placeholder="0.00"
                             min="1.00"
