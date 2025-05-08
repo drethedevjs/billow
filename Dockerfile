@@ -2,7 +2,10 @@ FROM node:24-slim
 
 WORKDIR /app
 
-COPY . .
+COPY package*.json .
+
 RUN npm install
-RUN npm run build
+
+COPY . .
+
 CMD npm run dev
