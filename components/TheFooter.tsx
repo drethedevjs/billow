@@ -20,7 +20,7 @@ const TheFooter = () => {
         </a>
       </span>
       <FooterLinkGroup>
-        <FooterLink href="#">About</FooterLink>
+        <FooterLink href="/about">About</FooterLink>
         <FooterLink href="#">Contact</FooterLink>
       </FooterLinkGroup>
     </Footer>

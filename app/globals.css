@@ -53,3 +53,11 @@ h3 {
 .active-sidebar-item {
   @apply !font-bold text-white !bg-accent;
 }
+
+.page-name {
+  @apply text-right text-8xl mt-10;
+}
+
+li {
+  @apply indent-10 mb-4 text-xl;
+}
