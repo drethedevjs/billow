@@ -81,8 +81,6 @@ const Portal = () => {
             <SidebarItem
               id="paymentHistory"
               onClick={() => selectTab("paymentHistory")}
-              label="Coming Soon"
-              labelColor="dark"
               className="sidebar-item"
             >
               Payment History
