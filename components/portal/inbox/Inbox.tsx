@@ -1,6 +1,6 @@
 "use client";
 import { InboxItem } from "@/interfaces/InboxItem";
-import { inboxSlice } from "@/store/inbox";
+import inboxSlice from "@/store/inbox";
 import {
   Table,
   TableBody,
@@ -54,7 +54,61 @@ const Inbox = () => {
             </TableRow>
           </TableHead>
         </Table>
-        <div className="h-72 overflow-scroll inset-shadow-sm/50 border-b-primary border-b-2">
+        <div className="border overflow-scroll h-72 rounded-sm">
+          <table className="table-auto w-full">
+            <thead>
+              <tr>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {!inboxMessages.length ? (
+                <tr className="p-10">
+                  <TableCell>You have no messages in your inbox.</TableCell>
+                </tr>
+              ) : (
+                inboxMessages.map((msg: InboxItem) => {
+                  return (
+                    <tr
+                      key={msg.id}
+                      className={`h-13 border bg-white dark:border-gray-700 dark:bg-gray-800 text-black dark:text-white ${
+                        msg.read ? "italic" : "font-bold"
+                      } ${msg.important ? "!bg-yellow-100" : ""}`}
+                    >
+                      <td onClick={() => openEmail(msg)} className="p-3">
+                        {moment(new Date(msg.date)).format(
+                          "MMMM Do YYYY, h:mm a"
+                        )}
+                      </td>
+                      <td
+                        onClick={() => openEmail(msg)}
+                        className="whitespace-nowrap text-gray-900 dark:text-white"
+                      >
+                        {msg.sender}
+                      </td>
+                      <td onClick={() => openEmail(msg)}>{msg.subject}</td>
+                      <td onClick={() => openEmail(msg)} className="">
+                        {msg.message.slice(0, 20) + "..."}
+                      </td>
+                      <td className="flex justify-between w-24">
+                        <StarIcons id={msg.id} important={msg.important} />
+                        <EnvelopeIcons id={msg.id} read={msg.read} />
+
+                        <button
+                          onClick={() => deleteMsg(msg.id)}
+                          className="font-medium hover:underline"
+                        >
+                          <BiTrash color="red" />
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })
+              )}
+            </tbody>
+          </table>
+        </div>
+        <div className="h-72 overflow-scroll inset-shadow-sm/50 border-b-primary border-b-2 hidden">
           <Table hoverable>
             <TableBody className="divide-y">
               {!inboxMessages.length ? (
@@ -66,7 +120,7 @@ const Inbox = () => {
                   return (
                     <TableRow
                       key={msg.id}
-                      className={` bg-white dark:border-gray-700 dark:bg-gray-800 text-black ${
+                      className={`bg-white dark:border-gray-700 dark:bg-gray-800 text-black dark:text-white ${
                         msg.read ? "italic" : "font-bold"
                       } ${msg.important ? "!bg-yellow-100" : ""}`}
                     >
@@ -87,7 +141,7 @@ const Inbox = () => {
                       <TableCell onClick={() => openEmail(msg)}>
                         {msg.message.slice(0, 20) + "..."}
                       </TableCell>
-                      <TableCell className="flex justify-between">
+                      <TableCell className="flex justify-between !px-3 border">
                         <StarIcons id={msg.id} important={msg.important} />
                         <EnvelopeIcons id={msg.id} read={msg.read} />
 

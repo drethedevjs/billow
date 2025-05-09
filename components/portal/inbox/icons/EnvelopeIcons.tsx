@@ -1,4 +1,4 @@
-import { inboxSlice } from "@/store/inbox";
+import inboxSlice from "@/store/inbox";
 import { BsEnvelopeArrowDown, BsEnvelopeArrowUpFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 const EnvelopeIcons = ({ id, read }: { id: number; read: boolean }) => {

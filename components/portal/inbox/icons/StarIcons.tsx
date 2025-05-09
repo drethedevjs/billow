@@ -1,4 +1,4 @@
-import { inboxSlice } from "@/store/inbox";
+import inboxSlice from "@/store/inbox";
 import { BsBookmarkStar, BsBookmarkStarFill } from "react-icons/bs";
 import { useDispatch } from "react-redux";
 

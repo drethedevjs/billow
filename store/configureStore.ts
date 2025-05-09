@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { inboxSlice } from "./inbox";
+import inboxSlice from "./inbox";
+import paymentHistorySlice from "./paymentHistory";
 import userAccountSlice from "./userAccount";
 
 console.log("Creating store...");
