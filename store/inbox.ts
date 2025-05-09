@@ -1,8 +1,8 @@
-import inboxSeedData from "@/data/storeSeed";
+import inboxSeedData from "@/data/inboxSeedData";
 import { BillowAction } from "@/interfaces/BillowAction";
 import { createSlice } from "@reduxjs/toolkit";
 
-export const inboxSlice = createSlice({
+const inboxSlice = createSlice({
   name: "inbox",
   initialState: inboxSeedData,
   reducers: {
@@ -28,3 +28,5 @@ export const inboxSlice = createSlice({
     }
   }
 });
+
+export default inboxSlice;
