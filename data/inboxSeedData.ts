@@ -3,11 +3,11 @@ import { faker } from "@faker-js/faker";
 
 function generateInboxItems(): InboxItem[] {
   return Array.from({ length: 10 }, () => ({
-    id: faker.number.int({ min: 100, max: 999 }),
-    subject: faker.lorem.words({ min: 1, max: 3 }),
+    id: faker.number.int({ min: 100, max: 9999 }),
+    subject: faker.book.title(),
     sender: faker.internet.email({ provider: "billow.com" }),
     date: faker.date.recent({ days: 30 }).toString(),
-    message: faker.lorem.paragraph(),
+    message: faker.lorem.sentences(),
     read: false,
     archived: false,
     important: false
