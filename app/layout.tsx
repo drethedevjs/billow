@@ -1,19 +1,9 @@
+import UserProvider from "@/context/UserContext";
 import Providers from "@/store/Providers";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import Header from "../components/Header";
 import TheFooter from "../components/TheFooter";
 import "./globals.css";
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"]
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"]
-});
 
 export const metadata: Metadata = {
   title: "Billow",
@@ -27,12 +17,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className="antialiased">
         <Header />
         <main className="container mx-auto min-h-screen flex flex-col">
-          <Providers>{children}</Providers>
+          <Providers>
+            <UserProvider>{children}</UserProvider>
+          </Providers>
         </main>
         <TheFooter />
       </body>

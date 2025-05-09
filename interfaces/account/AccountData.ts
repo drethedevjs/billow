@@ -1,3 +1,4 @@
+import Address from "./Address";
 import Location from "./Location";
 
 export interface AccountData {
@@ -5,5 +6,8 @@ export interface AccountData {
   utilityCompanyName: string;
   accountHolderFirstName: string;
   accountHolderLastName: string;
+  address: Address;
+  email: string;
+  phone: string;
   locations: Location[];
 }

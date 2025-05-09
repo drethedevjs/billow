@@ -1,11 +1,19 @@
 import { AccountData } from "@/interfaces/account/AccountData";
-
 export const accountData: AccountData[] = [
   {
     id: 1,
     utilityCompanyName: "City Waterworks",
     accountHolderFirstName: "Jane",
     accountHolderLastName: "Doe",
+    phone: "803-555-1234",
+    email: "jane.doe@example.com",
+    address: {
+      address1: "123 Palmetto St",
+      address2: "Apt 3B",
+      city: "Columbia",
+      state: "SC",
+      postal: "29201"
+    },
     locations: [
       {
         accountNumber: 100001001,
@@ -39,6 +47,15 @@ export const accountData: AccountData[] = [
     utilityCompanyName: "Metro Utilities",
     accountHolderFirstName: "Carlos",
     accountHolderLastName: "Ramirez",
+    phone: "912-555-5678",
+    email: "carlos.ramirez@example.com",
+    address: {
+      address1: "789 Magnolia Blvd",
+      address2: "Unit 12",
+      city: "Savannah",
+      state: "GA",
+      postal: "31401"
+    },
     locations: [
       {
         accountNumber: 100002001,
@@ -72,6 +89,15 @@ export const accountData: AccountData[] = [
     utilityCompanyName: "Sunstate Utility Services",
     accountHolderFirstName: "Aisha",
     accountHolderLastName: "Nguyen",
+    phone: "404-555-7890",
+    email: "aisha.nguyen@example.com",
+    address: {
+      address1: "321 Peach Tree Ln",
+      address2: "",
+      city: "Atlanta",
+      state: "GA",
+      postal: "30303"
+    },
     locations: [
       {
         accountNumber: 100003001,
@@ -105,6 +131,15 @@ export const accountData: AccountData[] = [
     utilityCompanyName: "Evergreen Municipal Services",
     accountHolderFirstName: "Liam",
     accountHolderLastName: "Chen",
+    phone: "843-555-2345",
+    email: "liam.chen@example.com",
+    address: {
+      address1: "908 Forest Dr",
+      address2: "",
+      city: "Charleston",
+      state: "SC",
+      postal: "29403"
+    },
     locations: [
       {
         accountNumber: 100004001,
@@ -128,6 +163,15 @@ export const accountData: AccountData[] = [
     utilityCompanyName: "Northern Utility Co.",
     accountHolderFirstName: "Emma",
     accountHolderLastName: "Khan",
+    phone: "706-555-3456",
+    email: "emma.khan@example.com",
+    address: {
+      address1: "222 Riverfront Ave",
+      address2: "",
+      city: "Augusta",
+      state: "GA",
+      postal: "30901"
+    },
     locations: [
       {
         accountNumber: 100005001,

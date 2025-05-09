@@ -72,8 +72,6 @@ const Portal = () => {
             <SidebarItem
               id="profile"
               onClick={() => selectTab("profile")}
-              label="Coming Soon"
-              labelColor="dark"
               className="sidebar-item"
             >
               Profile
