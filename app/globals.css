@@ -58,6 +58,8 @@ h3 {
   @apply text-right text-8xl mt-10;
 }
 
-li {
-  @apply indent-10 mb-4 text-xl;
+@layer components {
+  #about-us li {
+    @apply indent-10 mb-4 text-xl;
+  }
 }

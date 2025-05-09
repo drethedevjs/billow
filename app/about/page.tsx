@@ -20,8 +20,8 @@ const About = () => {
 
       <h2 className="text-2xl font-semibold mt-8 mb-4">Our Vision</h2>
       <p className="mb-6">
-        We’re building tools that reduce the stress of monthly bills by making
-        financial responsibility more approachable. Whether it’s water, power,
+        We're building tools that reduce the stress of monthly bills by making
+        financial responsibility more approachable. Whether it's water, power,
         recycling, or more, Billow puts control back in your hands.
       </p>
 
