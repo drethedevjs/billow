@@ -36,9 +36,7 @@ const Header = () => {
       <NavbarCollapse>
         <NavLink href="/">Home</NavLink>
         <NavLink href="/about">About</NavLink>
-        <NavLink href="/faq" disable={true}>
-          FAQ
-        </NavLink>
+        <NavLink href="/faq">FAQ</NavLink>
         <NavLink href="/portal">Dashboard</NavLink>
         <NavLink href="/contact" disable={true}>
           Contact
