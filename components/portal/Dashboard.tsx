@@ -1,7 +1,9 @@
 "use client";
+import { PlaidContext } from "@/context/PlaidContext";
 import { AccountData } from "@/interfaces/account/AccountData";
 import Service from "@/interfaces/account/Service";
 import type { RootState } from "@/store/configureStore";
+import dashboardHelper from "@/utils/dashboardHelper";
 import {
   Table,
   TableBody,
@@ -11,7 +13,12 @@ import {
   TableRow,
   TextInput
 } from "flowbite-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useMemo, useState } from "react";
+import {
+  PlaidLinkOnSuccessMetadata,
+  PlaidLinkOptions,
+  usePlaidLink
+} from "react-plaid-link";
 import { useSelector } from "react-redux";
 import PaymentButton from "./PaymentButton";
 
@@ -20,51 +27,31 @@ const Dashboard = () => {
   const accountData: AccountData = useSelector<RootState, AccountData>(
     (s) => s.account[whichAccount]
   );
+
+  const linkToken = useContext(PlaidContext);
   const [whichLocation, setWhichLocation] = useState<number>(0);
+  const services: Service[] = accountData.locations[whichLocation].services;
   const [processing, setProcessing] = useState<boolean>(false);
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
     Record<string, number>
   >({});
 
-  const changeToMostPrice = (type: string, service: Service) => {
-    const element = document.getElementById(
-      type.toLowerCase()
-    ) as HTMLInputElement;
-
-    const mostCustomerCanPay = Number(
-      (service.penalty + service.price).toFixed(2)
-    );
-
-    if (element) {
-      element.value = mostCustomerCanPay.toString();
-    } else throw new Error(`Cannot find the id for the ${type} utility.`);
-
-    return mostCustomerCanPay;
+  const config: PlaidLinkOptions = {
+    onSuccess: async (
+      public_token: string,
+      metadata: PlaidLinkOnSuccessMetadata
+    ) => {
+      console.log("Public Token: ", public_token);
+      console.log("Metadata: ", metadata);
+    },
+    onExit: (err) => {
+      if (err) console.error(err);
+    },
+    // onEvent: (eventName, metadata) => {},
+    token: linkToken
   };
 
-  const updateServicePaymentAmount = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: string
-  ): void => {
-    const amount = Number(e.target.value);
-
-    const service = accountData.locations[whichLocation].services.find(
-      (s) => s.type === type
-    );
-    if (!service) return;
-
-    if (amount > service.price) {
-      const mostCustomerCanPay = changeToMostPrice(type, service);
-      setServicePaymentAmounts((prev) => ({
-        ...prev,
-        [type]: mostCustomerCanPay
-      }));
-
-      return;
-    }
-
-    setServicePaymentAmounts((prev) => ({ ...prev, [type]: amount }));
-  };
+  const { open } = usePlaidLink(config);
 
   useEffect(() => {
     const firstAccount = document.getElementsByClassName("account-number")[0];
@@ -82,6 +69,31 @@ const Dashboard = () => {
     setWhichLocation(locationIdx);
   };
 
+  const updateServicePaymentAmount = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    type: string
+  ): void => {
+    const amount = Number(e.target.value);
+
+    const service = services.find((s) => s.type === type);
+    if (!service) return;
+
+    if (amount > service.price) {
+      const mostCustomerCanPay = dashboardHelper.changeToMostPrice(
+        type,
+        service
+      );
+      setServicePaymentAmounts((prev) => ({
+        ...prev,
+        [type]: mostCustomerCanPay
+      }));
+
+      return;
+    }
+
+    setServicePaymentAmounts((prev) => ({ ...prev, [type]: amount }));
+  };
+
   const runMockFunc = (mockFunction: () => void) => {
     setProcessing(true);
 
@@ -93,13 +105,13 @@ const Dashboard = () => {
   };
 
   const totalDue = useMemo(() => {
-    return accountData.locations[whichLocation].services
+    return services
       .reduce(
         (acc, currentValue) => acc + currentValue.price + currentValue.penalty,
         0
       )
       .toFixed(2);
-  }, [accountData.locations, whichLocation]);
+  }, [services]);
 
   const calcTotalPayment = useMemo(() => {
     const paymentAmounts = Object.values(servicePaymentAmounts);
@@ -119,6 +131,12 @@ const Dashboard = () => {
         {accountData.utilityCompanyName}
       </h2>
 
+      <button
+        onClick={() => open()}
+        className="bg-black px-5 py-3 text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
+      >
+        Connect to Plaid
+      </button>
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
         {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
@@ -154,7 +172,7 @@ const Dashboard = () => {
                 </TableRow>
               </TableHead>
               <TableBody className="divide-y">
-                {accountData.locations[whichLocation].services.map((s, idx) => {
+                {services.map((s, idx) => {
                   return (
                     <React.Fragment key={idx}>
                       <TableRow
