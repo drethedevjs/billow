@@ -23,7 +23,7 @@ export async function GET() {
       phone_number: "+1 415 5550123"
     },
     client_name: "Billow",
-    products: [Products.Transactions, Products.Auth],
+    products: [Products.Transfer, Products.Auth],
     required_if_supported_products: [Products.Identity],
     transactions: {
       days_requested: 730
