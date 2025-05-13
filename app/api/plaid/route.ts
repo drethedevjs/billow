@@ -2,7 +2,9 @@ import {
   BillowResponse,
   BillowSimpleResponse
 } from "@/interfaces/BillowResponse";
+import GetAndStoreAccessTokenRequest from "@/interfaces/requests/GetAndStoreAccessTokenRequest";
 import { storeAccessToken } from "@/lib/accessTokens";
+import { storeAccountInformation } from "@/lib/accounts";
 import plaidClient from "@/utils/plaidClient";
 import {
   CountryCode,
@@ -70,16 +72,23 @@ export async function GET() {
   }
 }
 
-export async function POST(publicToken: string) {
+export async function POST(request: Request) {
+  const { publicToken, accountId }: GetAndStoreAccessTokenRequest =
+    await request.json();
+
+  // calling /item/public_token/exchange endpoint
   const response = await plaidClient.itemPublicTokenExchange({
     public_token: publicToken
   });
 
   const accessToken = response.data.access_token;
-  storeAccessToken(accessToken);
+  const userId = "1234";
+
+  storeAccessToken(accessToken, userId);
+  storeAccountInformation({ userId, accountId });
 
   const result: BillowSimpleResponse = {
-    message: "",
+    message: "Access token and account information stored!",
     isSuccess: true
   };
 

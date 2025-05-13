@@ -4,6 +4,7 @@ import { AccountData } from "@/interfaces/account/AccountData";
 import Service from "@/interfaces/account/Service";
 import type { RootState } from "@/store/configureStore";
 import dashboardHelper from "@/utils/dashboardHelper";
+import plaidHelper from "@/utils/plaidHelper";
 import {
   Table,
   TableBody,
@@ -14,11 +15,7 @@ import {
   TextInput
 } from "flowbite-react";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import {
-  PlaidLinkOnSuccessMetadata,
-  PlaidLinkOptions,
-  usePlaidLink
-} from "react-plaid-link";
+import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 import { useSelector } from "react-redux";
 import PaymentButton from "./PaymentButton";
 
@@ -37,16 +34,9 @@ const Dashboard = () => {
   >({});
 
   const config: PlaidLinkOptions = {
-    onSuccess: async (
-      public_token: string,
-      metadata: PlaidLinkOnSuccessMetadata
-    ) => {
-      console.log("Public Token: ", public_token);
-      console.log("Metadata: ", metadata);
-    },
-    onExit: (err) => {
-      if (err) console.error(err);
-    },
+    // onSuccess runs when users links their bank accounts.
+    onSuccess: plaidHelper.getAndStoreAccessToken,
+    onExit: plaidHelper.logErrorsToConsole,
     // onEvent: (eventName, metadata) => {},
     token: linkToken
   };
@@ -136,6 +126,13 @@ const Dashboard = () => {
         className="bg-black px-5 py-3 text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
       >
         Connect to Plaid
+      </button>
+
+      <button
+        onClick={() => open()}
+        className="bg-white px-5 py-3 text-black rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
+      >
+        Connect to Plaid (fast)
       </button>
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
