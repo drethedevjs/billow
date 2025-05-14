@@ -1,10 +1,4 @@
-import {
-  BillowResponse,
-  BillowSimpleResponse
-} from "@/interfaces/BillowResponse";
-import GetAndStoreAccessTokenRequest from "@/interfaces/requests/GetAndStoreAccessTokenRequest";
-import { storeAccessToken } from "@/lib/accessTokens";
-import { storeAccountInformation } from "@/lib/accounts";
+import { BillowResponse } from "@/interfaces/BillowResponse";
 import plaidClient from "@/utils/plaidClient";
 import {
   CountryCode,
@@ -14,26 +8,21 @@ import {
   Products
 } from "plaid";
 
-// export async function GET() {
-//   return Response.json({ message: "You hit me." });
-// }
-
+// getLinkToken - Gets link token for new account connection.
 export async function GET() {
-  const request: LinkTokenCreateRequest = {
+  const linkTokenRequest: LinkTokenCreateRequest = {
     user: {
       client_user_id: "user-id",
       phone_number: "+1 415 5550123"
     },
     client_name: "Billow",
-    products: [Products.Transfer, Products.Auth],
-    required_if_supported_products: [Products.Identity],
+    products: [Products.Transfer],
+    // required_if_supported_products: [Products.Identity],
     transactions: {
       days_requested: 730
     },
     country_codes: [CountryCode.Us],
     language: "en",
-    webhook: "https://sample-web-hook.com",
-    // redirect_uri: "https://domainname.com/oauth-page.html",
     account_filters: {
       depository: {
         account_subtypes: [
@@ -50,7 +39,7 @@ export async function GET() {
   try {
     console.log("Getting link token...");
 
-    const response = await plaidClient.linkTokenCreate(request);
+    const response = await plaidClient.linkTokenCreate(linkTokenRequest);
     const linkToken = response.data.link_token;
     console.log("Retrieved link token...");
 
@@ -70,27 +59,4 @@ export async function GET() {
       isSuccess: false
     };
   }
-}
-
-export async function POST(request: Request) {
-  const { publicToken, accountId }: GetAndStoreAccessTokenRequest =
-    await request.json();
-
-  // calling /item/public_token/exchange endpoint
-  const response = await plaidClient.itemPublicTokenExchange({
-    public_token: publicToken
-  });
-
-  const accessToken = response.data.access_token;
-  const userId = "1234";
-
-  storeAccessToken(accessToken, userId);
-  storeAccountInformation({ userId, accountId });
-
-  const result: BillowSimpleResponse = {
-    message: "Access token and account information stored!",
-    isSuccess: true
-  };
-
-  return Response.json(result);
 }
