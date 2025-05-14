@@ -69,10 +69,7 @@ const Dashboard = () => {
     if (!service) return;
 
     if (amount > service.price) {
-      const mostCustomerCanPay = dashboardHelper.changeToMostPrice(
-        type,
-        service
-      );
+      const mostCustomerCanPay = changeToMostPrice(type, service);
       setServicePaymentAmounts((prev) => ({
         ...prev,
         [type]: mostCustomerCanPay
@@ -216,7 +213,7 @@ const Dashboard = () => {
                     ${totalDue}
                   </TableCell>
                   <TableCell className="text-accent">
-                    ${calcTotalPayment}
+                    ${calcTotalPayment()}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -224,7 +221,7 @@ const Dashboard = () => {
             <PaymentButton
               isProcessing={processing}
               runMockFunction={runMockFunc}
-              calcTotalPayment={calcTotalPayment}
+              totalPayment={calcTotalPayment()}
               location={accountData.locations[whichLocation]}
               servicePaymentAmounts={servicePaymentAmounts}
             />
