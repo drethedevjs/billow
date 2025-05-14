@@ -8,8 +8,10 @@ export const UserContext = createContext<User | null>(null);
 const whichUser = 4;
 const account = accountData[whichUser];
 const user: User = {
+  id: "1234",
   firstName: account.accountHolderFirstName,
   lastName: account.accountHolderLastName,
+  fullName: account.accountHolderFirstName + account.accountHolderLastName,
   address: account.address,
   email: account.email,
   phone: account.phone
