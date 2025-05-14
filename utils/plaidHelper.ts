@@ -20,7 +20,7 @@ const plaidHelper = {
     metadata: PlaidLinkOnSuccessMetadata
   ) => {
     const accountId = metadata.accounts[0].id;
-    const response = await axios.post(`${baseUrl}/api/plaid`, {
+    const response = await axios.post(`${baseUrl}/api/plaid-exchange`, {
       publicToken,
       accountId
     });
@@ -29,7 +29,8 @@ const plaidHelper = {
   },
   logErrorsToConsole: (err: PlaidLinkError | null) => {
     if (err) console.error(err);
-  }
+  },
+  getAccessToken: async () => {}
 };
 
 export default plaidHelper;
