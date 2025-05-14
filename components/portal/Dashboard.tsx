@@ -103,7 +103,7 @@ const Dashboard = () => {
       .toFixed(2);
   }, [services]);
 
-  const calcTotalPayment = useMemo(() => {
+  const calcTotalPayment = () => {
     const paymentAmounts = Object.values(servicePaymentAmounts);
 
     const total = paymentAmounts
@@ -111,7 +111,7 @@ const Dashboard = () => {
       .toFixed(2);
 
     return total;
-  }, [servicePaymentAmounts]);
+  };
 
   return (
     <>
@@ -128,12 +128,6 @@ const Dashboard = () => {
         Connect to Plaid
       </button>
 
-      <button
-        onClick={() => open()}
-        className="bg-white px-5 py-3 text-black rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
-      >
-        Connect to Plaid (fast)
-      </button>
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
         {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
