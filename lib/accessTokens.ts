@@ -19,3 +19,13 @@ export const storeAccessToken = (token: string, userId: string) => {
     );
   }
 };
+
+export const getAccessToken = (userId: string) => {
+  const row = db
+    .prepare<[string], { token: string }>(
+      "SELECT token FROM accessTokens WHERE user_id = ?"
+    )
+    .get(userId);
+
+  return row?.token;
+};

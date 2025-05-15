@@ -11,3 +11,13 @@ export const storeAccountInformation = (
     request.accountId
   );
 };
+
+export const getAccountId = (userId: string) => {
+  const row = db
+    .prepare<[string], { account_id: string }>(
+      "SELECT account_id FROM accounts WHERE user_id = ?"
+    )
+    .get(userId);
+
+  return row?.account_id;
+};
