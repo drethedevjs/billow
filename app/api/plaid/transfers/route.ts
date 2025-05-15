@@ -36,7 +36,7 @@ const initiateTransfer = async (
     description: "Water Bill",
     type: TransferType.Debit
   };
-  console.log("authorizationId", authorizationId);
+
   try {
     const response = await plaidClient.transferCreate(transferCreateReq);
 
@@ -61,7 +61,7 @@ const initiateTransfer = async (
       );
     } else {
       throw new Error(
-        `Transfer failed: ${plaidError.error_code} - ${plaidError.error_message}`
+        `Transfer failed: METHOD: initiateTransfer() - ${plaidError.error_code} - ${plaidError.error_message}`
       );
     }
   }
