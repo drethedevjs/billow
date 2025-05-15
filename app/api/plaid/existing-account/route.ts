@@ -86,7 +86,7 @@ const createAuthTransfer = async (
     }
 
     throw new Error(
-      `Could not authorize transfer: ${plaidError.error_code} - ${plaidError.error_message}`
+      `Could not authorize transfer: METHOD: createAuthTransfer() - ${plaidError.error_code} - ${plaidError.error_message}`
     );
   }
 };
