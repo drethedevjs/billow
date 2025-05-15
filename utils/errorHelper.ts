@@ -2,8 +2,10 @@ import axios from "axios";
 
 export const handleError = (error: unknown) => {
   if (axios.isAxiosError(error)) {
-    // It's an Axios error — has response, config, etc.
-    console.error("Axios error:", error.response?.data);
+    // Checking for 404 error specifically because the data object
+    // in an axios 404 error has the whole source code in it.
+    if (error.response?.status === 404) console.error("Bad Request");
+    else console.error("Axios error:", error.response?.data);
   } else {
     // Some other error (network, syntax, etc.)
     console.error("Unexpected error:", error);

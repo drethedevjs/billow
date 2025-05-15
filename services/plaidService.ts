@@ -82,10 +82,10 @@ const createTransferAuthorization = async (
   if (decision === TransferAuthorizationDecision.Declined)
     throw new Error("Authorization was declined!");
 
-  if (decision !== TransferAuthorizationDecision.UserActionRequired)
-    throw new Error(
-      `Your financial institution says that further action is required. Please use the old payment system and report this to your utility company.`
-    );
+  // if (decision !== TransferAuthorizationDecision.UserActionRequired)
+  //   throw new Error(
+  //     `Your financial institution says that further action is required. Please use the old payment system and report this to your utility company.`
+  //   );
 
   // TODO: Need a workflow for decision being approved but for the decision_rationale to not be null.
   // The video in the Plaid docs said to handle on a case by case basis.
@@ -118,7 +118,6 @@ const initiateTransfer = async (
 
   const response = await transferCreateHandler(request);
 
-  console.log("Transfer response", response);
   return {
     data: response.data,
     message: "Transfer initiated successfully",

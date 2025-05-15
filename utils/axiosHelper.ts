@@ -6,3 +6,7 @@ export const billowPost = async <Request, Response>(
 ) => {
   return axios.post<Response, AxiosResponse<Response>, Request>(url, data);
 };
+
+export const billowGet = async <Response>(url: string) => {
+  return axios.get<Response, AxiosResponse<Response>>(url);
+};

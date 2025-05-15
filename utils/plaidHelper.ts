@@ -1,5 +1,8 @@
+import { BillowSimpleResponse } from "@/interfaces/BillowResponse";
+import GetAndStoreAccessTokenRequest from "@/interfaces/requests/GetAndStoreAccessTokenRequest";
 import axios from "axios";
 import { PlaidLinkError, PlaidLinkOnSuccessMetadata } from "react-plaid-link";
+import { billowPost } from "./axiosHelper";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -19,10 +22,16 @@ const plaidHelper = {
     publicToken: string,
     metadata: PlaidLinkOnSuccessMetadata
   ) => {
-    const accountId = metadata.accounts[0].id;
-    const response = await axios.post(`${baseUrl}/api/plaid-exchange`, {
+    // Should always be the first account because transfers only
+    // support one account at a time.
+    const { id: accountId, mask } = metadata.accounts[0];
+    const response = await billowPost<
+      GetAndStoreAccessTokenRequest,
+      BillowSimpleResponse
+    >(`${baseUrl}/api/plaid/exchange`, {
       publicToken,
-      accountId
+      accountId,
+      accountMask: mask
     });
 
     return response;
