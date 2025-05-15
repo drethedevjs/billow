@@ -3,22 +3,20 @@ import Location from "@/interfaces/account/Location";
 import { User } from "@/interfaces/User";
 import { beginFundsTransfer as plaidPay } from "@/services/plaidService";
 import userAccountSlice from "@/store/userAccount";
-import { serviceTypes } from "@/types/ServiceType";
+import { clearPaymentAmountInputs } from "@/utils/dashboardHelper";
 import { Button, Spinner } from "flowbite-react";
-import { useContext } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 
 const PaymentButton = ({
-  isProcessing,
-  runMockFunction,
+  setServicePaymentAmounts,
   totalPayment,
   location,
   servicePaymentAmounts,
   accountMask
 }: {
-  isProcessing: boolean;
-  runMockFunction: (func: () => Promise<void>) => void;
+  setServicePaymentAmounts: Dispatch<SetStateAction<Record<string, number>>>;
   totalPayment: string;
   location: Location;
   servicePaymentAmounts: Record<string, number>;
@@ -26,12 +24,17 @@ const PaymentButton = ({
 }) => {
   const { payBill } = userAccountSlice.actions;
   const dispatch = useDispatch();
-  const userContext = useContext<User | null>(UserContext);
-  if (!userContext) throw new Error("userContext must be set.");
-  const { fullName, id: userId } = userContext;
+  const user = useContext<User | null>(UserContext);
+  if (!user) throw new Error("User not set.");
+  const { fullName, id: userId } = user;
 
-  const pay = () => {
-    const processPayment = async () => {
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+
+  const pay = async () => {
+    setIsProcessing(true);
+
+    // TODO: Remove this mock delay
+    setTimeout(async () => {
       const response = await plaidPay(fullName, userId, totalPayment);
       if (!response.isSuccess) {
         console.error(response.message);
@@ -50,19 +53,9 @@ const PaymentButton = ({
       });
 
       clearPaymentAmountInputs();
-    };
-
-    runMockFunction(processPayment);
-  };
-
-  const clearPaymentAmountInputs = () => {
-    for (const st of serviceTypes) {
-      const input = document.getElementById(
-        st.toLowerCase()
-      ) as HTMLInputElement;
-
-      if (input) input.value = "0";
-    }
+      setServicePaymentAmounts({ "": 0 });
+      setIsProcessing(false);
+    }, 3000);
   };
 
   return (

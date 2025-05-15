@@ -1,11 +1,14 @@
 "use client";
 import { UserContext } from "@/context/UserContext";
-import { AccountData } from "@/interfaces/account/AccountData";
 import Service from "@/interfaces/account/Service";
 import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
 import { verifyAccessTokenAndGetAccountInformation } from "@/services/userService";
-import type { RootState } from "@/store/configureStore";
-import { changeToMostPrice } from "@/utils/dashboardHelper";
+import { useBillowSelector } from "@/store/configureStore";
+import {
+  calcTotalPayment,
+  changeBackgroundToActiveAccount,
+  changeToMostPrice
+} from "@/utils/dashboardHelper";
 import {
   Table,
   TableBody,
@@ -16,24 +19,24 @@ import {
   TextInput
 } from "flowbite-react";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { useSelector } from "react-redux";
-import { setTimeout } from "timers";
 import ConnectToPlaidButton from "./ConnectToPlaidButton";
+import LocationSelector from "./LocationSelector";
 import PaymentButton from "./PaymentButton";
 
 const Dashboard = () => {
   const whichAccount: number = 4;
-  const accountData: AccountData = useSelector<RootState, AccountData>(
-    (s) => s.account[whichAccount]
+  const user = useContext(UserContext);
+  const accountData = useBillowSelector((s) => s.account[whichAccount]);
+
+  const [locationIdx, setLocationIdx] = useState<number>(0);
+  const services: Service[] = useMemo(
+    () => accountData.locations[locationIdx].services,
+    [accountData.locations, locationIdx]
   );
 
-  const [whichLocation, setWhichLocation] = useState<number>(0);
-  const services: Service[] = accountData.locations[whichLocation].services;
-  const [processing, setProcessing] = useState<boolean>(false);
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
     Record<string, number>
   >({});
-  const user = useContext(UserContext);
 
   const [plaidConnectivityVerification, setPlaidConnectivityVerification] =
     useState<VerifyAccessTokenAndAccountInformation | null>(null);
@@ -57,12 +60,8 @@ const Dashboard = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectLocation = (e: any, locationIdx: number) => {
     setServicePaymentAmounts({ "": 0 });
-    const activeAccountEl = document.getElementsByClassName(
-      "bg-accent account-number"
-    );
-    activeAccountEl[0]?.classList.remove("bg-accent");
-    e.target?.classList.add("bg-accent");
-    setWhichLocation(locationIdx);
+    changeBackgroundToActiveAccount(e);
+    setLocationIdx(locationIdx);
   };
 
   const updateServicePaymentAmount = (
@@ -87,16 +86,6 @@ const Dashboard = () => {
     setServicePaymentAmounts((prev) => ({ ...prev, [type]: amount }));
   };
 
-  const runMockFunc = (mockFunction: () => Promise<void>) => {
-    setProcessing(true);
-
-    setTimeout(async () => {
-      await mockFunction();
-      setProcessing(false);
-      setServicePaymentAmounts({});
-    }, 3000);
-  };
-
   const totalDue = useMemo(() => {
     return services
       .reduce(
@@ -105,16 +94,6 @@ const Dashboard = () => {
       )
       .toFixed(2);
   }, [services]);
-
-  const calcTotalPayment = () => {
-    const paymentAmounts = Object.values(servicePaymentAmounts);
-
-    const total = paymentAmounts
-      .reduce((prev, current) => prev + current, 0)
-      .toFixed(2);
-
-    return total;
-  };
 
   return (
     <>
@@ -131,21 +110,10 @@ const Dashboard = () => {
       <hr></hr>
       <div className="flex xl:flex-row flex-col mt-5">
         <div className="w-full xl:w-1/2">
-          <h3 className="text-center mb-4">Account Number</h3>
-          <ul className="bg-primary">
-            {accountData.locations.map((l, idx) => {
-              return (
-                <li
-                  key={l.accountNumber}
-                  id={l.accountNumber.toString()}
-                  onClick={(e) => selectLocation(e, idx)}
-                  className="border-b-2 text-center p-3 text-white account-number cursor-pointer"
-                >
-                  {l.accountNumber} | {l.address.address1}
-                </li>
-              );
-            })}
-          </ul>
+          <LocationSelector
+            accountData={accountData}
+            selectLocation={selectLocation}
+          />
         </div>
         <div className="w-full xl:w-1/2">
           <h3 className="text-center mb-4">Services</h3>
@@ -212,7 +180,7 @@ const Dashboard = () => {
                     ${totalDue}
                   </TableCell>
                   <TableCell className="text-accent">
-                    ${calcTotalPayment()}
+                    ${calcTotalPayment(servicePaymentAmounts)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -220,10 +188,9 @@ const Dashboard = () => {
 
             {plaidConnectivityVerification?.hasAccessToken ? (
               <PaymentButton
-                isProcessing={processing}
-                runMockFunction={runMockFunc}
-                totalPayment={calcTotalPayment()}
-                location={accountData.locations[whichLocation]}
+                setServicePaymentAmounts={setServicePaymentAmounts}
+                totalPayment={calcTotalPayment(servicePaymentAmounts)}
+                location={accountData.locations[locationIdx]}
                 servicePaymentAmounts={servicePaymentAmounts}
                 accountMask={
                   plaidConnectivityVerification?.accountInformation?.accountMask
