@@ -17,6 +17,8 @@ import {
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 import { useSelector } from "react-redux";
+import { setTimeout } from "timers";
+import ConnectToPlaidButton from "./ConnectToPlaidButton";
 import PaymentButton from "./PaymentButton";
 
 const Dashboard = () => {
@@ -118,13 +120,6 @@ const Dashboard = () => {
         {accountData.utilityCompanyName}
       </h2>
 
-      <button
-        onClick={() => open()}
-        className="bg-black px-5 py-3 text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
-      >
-        Connect to Plaid
-      </button>
-
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
         {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
@@ -218,13 +213,21 @@ const Dashboard = () => {
                 </TableRow>
               </TableBody>
             </Table>
+
+            {plaidConnectivityVerification?.hasAccessToken ? (
             <PaymentButton
               isProcessing={processing}
               runMockFunction={runMockFunc}
               totalPayment={calcTotalPayment()}
               location={accountData.locations[whichLocation]}
               servicePaymentAmounts={servicePaymentAmounts}
+                accountMask={
+                  plaidConnectivityVerification?.accountInformation?.accountMask
+                }
             />
+            ) : (
+              <ConnectToPlaidButton />
+            )}
           </div>
         </div>
       </div>
