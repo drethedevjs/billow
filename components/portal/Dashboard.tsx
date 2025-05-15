@@ -3,7 +3,7 @@ import { PlaidContext } from "@/context/PlaidContext";
 import { AccountData } from "@/interfaces/account/AccountData";
 import Service from "@/interfaces/account/Service";
 import type { RootState } from "@/store/configureStore";
-import dashboardHelper from "@/utils/dashboardHelper";
+import { changeToMostPrice } from "@/utils/dashboardHelper";
 import plaidHelper from "@/utils/plaidHelper";
 import {
   Table,
@@ -81,11 +81,11 @@ const Dashboard = () => {
     setServicePaymentAmounts((prev) => ({ ...prev, [type]: amount }));
   };
 
-  const runMockFunc = (mockFunction: () => void) => {
+  const runMockFunc = (mockFunction: () => Promise<void>) => {
     setProcessing(true);
 
-    setTimeout(() => {
-      mockFunction();
+    setTimeout(async () => {
+      await mockFunction();
       setProcessing(false);
       setServicePaymentAmounts({});
     }, 3000);
