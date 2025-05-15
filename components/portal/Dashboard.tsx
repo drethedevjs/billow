@@ -1,10 +1,11 @@
 "use client";
-import { PlaidContext } from "@/context/PlaidContext";
+import { UserContext } from "@/context/UserContext";
 import { AccountData } from "@/interfaces/account/AccountData";
 import Service from "@/interfaces/account/Service";
+import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
+import { verifyAccessTokenAndGetAccountInformation } from "@/services/userService";
 import type { RootState } from "@/store/configureStore";
 import { changeToMostPrice } from "@/utils/dashboardHelper";
-import plaidHelper from "@/utils/plaidHelper";
 import {
   Table,
   TableBody,
@@ -15,7 +16,6 @@ import {
   TextInput
 } from "flowbite-react";
 import React, { useContext, useEffect, useMemo, useState } from "react";
-import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 import { useSelector } from "react-redux";
 import { setTimeout } from "timers";
 import ConnectToPlaidButton from "./ConnectToPlaidButton";
@@ -27,28 +27,32 @@ const Dashboard = () => {
     (s) => s.account[whichAccount]
   );
 
-  const linkToken = useContext(PlaidContext);
   const [whichLocation, setWhichLocation] = useState<number>(0);
   const services: Service[] = accountData.locations[whichLocation].services;
   const [processing, setProcessing] = useState<boolean>(false);
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
     Record<string, number>
   >({});
+  const user = useContext(UserContext);
 
-  const config: PlaidLinkOptions = {
-    // onSuccess runs when users links their bank accounts.
-    onSuccess: plaidHelper.getAndStoreAccessToken,
-    onExit: plaidHelper.logErrorsToConsole,
-    // onEvent: (eventName, metadata) => {},
-    token: linkToken
-  };
-
-  const { open } = usePlaidLink(config);
+  const [plaidConnectivityVerification, setPlaidConnectivityVerification] =
+    useState<VerifyAccessTokenAndAccountInformation | null>(null);
 
   useEffect(() => {
     const firstAccount = document.getElementsByClassName("account-number")[0];
     firstAccount.classList.add("bg-accent");
-  }, []);
+
+    const runFunction = async () => {
+      const response = await verifyAccessTokenAndGetAccountInformation(
+        user!.id
+      );
+
+      if (response.isSuccess && response.data)
+        setPlaidConnectivityVerification(response.data);
+    };
+
+    runFunction();
+  }, [user]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectLocation = (e: any, locationIdx: number) => {
@@ -215,16 +219,16 @@ const Dashboard = () => {
             </Table>
 
             {plaidConnectivityVerification?.hasAccessToken ? (
-            <PaymentButton
-              isProcessing={processing}
-              runMockFunction={runMockFunc}
-              totalPayment={calcTotalPayment()}
-              location={accountData.locations[whichLocation]}
-              servicePaymentAmounts={servicePaymentAmounts}
+              <PaymentButton
+                isProcessing={processing}
+                runMockFunction={runMockFunc}
+                totalPayment={calcTotalPayment()}
+                location={accountData.locations[whichLocation]}
+                servicePaymentAmounts={servicePaymentAmounts}
                 accountMask={
                   plaidConnectivityVerification?.accountInformation?.accountMask
                 }
-            />
+              />
             ) : (
               <ConnectToPlaidButton />
             )}
