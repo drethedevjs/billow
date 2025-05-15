@@ -1,28 +1,42 @@
+import { UserContext } from "@/context/UserContext";
 import Location from "@/interfaces/account/Location";
+import { User } from "@/interfaces/User";
+import { beginFundsTransfer as plaidPay } from "@/services/plaidService";
 import userAccountSlice from "@/store/userAccount";
 import { serviceTypes } from "@/types/ServiceType";
 import { Button, Spinner } from "flowbite-react";
+import { useContext } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 
 const PaymentButton = ({
   isProcessing,
   runMockFunction,
-  calcTotalPayment,
+  totalPayment,
   location,
   servicePaymentAmounts
 }: {
   isProcessing: boolean;
-  runMockFunction: (func: () => void) => void;
-  calcTotalPayment: string;
+  runMockFunction: (func: () => Promise<void>) => void;
+  totalPayment: string;
   location: Location;
   servicePaymentAmounts: Record<string, number>;
 }) => {
   const { payBill } = userAccountSlice.actions;
   const dispatch = useDispatch();
+  const userContext = useContext<User | null>(UserContext);
+  if (!userContext) throw new Error("userContext must be set.");
+  const { fullName, id: userId } = userContext;
 
   const pay = () => {
-    const processPayment = () => {
+    const processPayment = async () => {
+      const response = await plaidPay(fullName, userId, totalPayment);
+      if (!response.isSuccess) {
+        console.error(response.message);
+        // TODO: Add error toast
+        throw new Error(response.message);
+      }
+
       Object.keys(servicePaymentAmounts).forEach((serviceType) => {
         dispatch(
           payBill({
@@ -64,7 +78,7 @@ const PaymentButton = ({
         <Button
           onClick={pay}
           className="mt-3 w-full bg-primary focus:!ring-0 hover:bg-accent transition-colors dark:bg-accent dark:hover:bg-slate dark:hover:text-accent disabled:bg-muted"
-          disabled={Number(calcTotalPayment) === 0}
+          disabled={Number(totalPayment) === 0}
         >
           <BiDollarCircle className="mr-2 h-5 w-5" />
           Make Payment
