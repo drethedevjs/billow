@@ -10,7 +10,7 @@
 - 🔐 [TypeScript](https://www.typescriptlang.org/)
 - 🎨 [Tailwind CSS](https://tailwindcss.com/) + [Flowbite UI](https://flowbite.com/)
 - 🗄️ [Redux](https://redux.js.org/) for state management
-- 💰 [Plaid](https://plaid.com/) for bank and credit card payments
+- 💰 [Plaid](https://plaid.com/) for bank connections and ACH payments
 - 🧠 Modular architecture with feature-based components
 
 ---
