@@ -63,3 +63,19 @@ h3 {
     @apply indent-10 mb-4 text-xl;
   }
 }
+
+.plaid-button {
+  @apply bg-black w-full py-3 text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300;
+}
+
+.billow-btn-long {
+  @apply mt-3 w-full focus:!ring-0;
+}
+
+.payment-btn {
+  @apply bg-primary hover:bg-accent transition-colors dark:bg-accent dark:hover:bg-slate dark:hover:text-accent disabled:bg-muted;
+}
+
+.payment-processing-btn {
+  @apply bg-white hover:bg-white border border-accent text-accent dark:bg-white dark:hover:bg-white dark:hover:text-accent cursor-not-allowed;
+}
