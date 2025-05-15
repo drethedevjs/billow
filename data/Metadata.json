@@ -1,0 +1,41 @@
+{
+  "status": null,
+  "link_session_id": "edaa19b6-8569-4f4f-a436-bb216bcf2bac",
+  "institution": {
+    "name": "Capital One",
+    "institution_id": "ins_128026"
+  },
+  "accounts": [
+    {
+      "id": "NZpnxmQg7VSQpE33gRewc7AXG6DwvZcXLa3ae",
+      "name": "Plaid Checking",
+      "mask": "0000",
+      "type": "depository",
+      "subtype": "checking",
+      "verification_status": null,
+      "class_type": null
+    },
+    {
+      "id": "Le1bBn7o4GcJ1XAARjybfkJG3kB1B7TegB7dN",
+      "name": "Plaid Saving",
+      "mask": "1111",
+      "type": "depository",
+      "subtype": "savings",
+      "verification_status": null,
+      "class_type": null
+    }
+  ],
+  "account": {
+    "id": "NZpnxmQg7VSQpE33gRewc7AXG6DwvZcXLa3ae",
+    "name": "Plaid Checking",
+    "mask": "0000",
+    "type": "depository",
+    "subtype": "checking",
+    "verification_status": null,
+    "class_type": null
+  },
+  "account_id": "NZpnxmQg7VSQpE33gRewc7AXG6DwvZcXLa3ae",
+  "transfer_status": null,
+  "wallet": null,
+  "public_token": "public-sandbox-50f8ddc3-4822-49ee-9b18-6ad6782efa25"
+}

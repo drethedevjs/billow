@@ -8,7 +8,7 @@ const ConnectToPlaidButton = () => {
 
   const config: PlaidLinkOptions = {
     // onSuccess runs when users links their bank accounts.
-    onSuccess: plaidHelper.getAndStoreAccessToken,
+    onSuccess: plaidHelper.createAndStoreAccessToken,
     onExit: plaidHelper.logErrorsToConsole,
     // onEvent: (eventName, metadata) => {},
     token: linkToken

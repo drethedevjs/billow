@@ -8,7 +8,7 @@ export const UserContext = createContext<User | null>(null);
 const whichUser = 4;
 const account = accountData[whichUser];
 const user: User = {
-  id: "1234",
+  id: account.id.toString(),
   firstName: account.accountHolderFirstName,
   lastName: account.accountHolderLastName,
   fullName: account.accountHolderFirstName + account.accountHolderLastName,

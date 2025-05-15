@@ -1,9 +1,12 @@
 "use server";
 import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
-import { BillowResponse } from "@/interfaces/BillowResponse";
-import { billowGet } from "@/utils/axiosHelper";
+import {
+  BillowResponse,
+  BillowSimpleResponse
+} from "@/interfaces/BillowResponse";
+import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
+import { billowGet, billowPost } from "@/utils/axiosHelper";
 import { handleError } from "@/utils/errorHelper";
-import axios from "axios";
 
 const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
@@ -42,18 +45,30 @@ export const verifyAccessTokenAndGetAccountInformation = async (
 
 export const storeAccessTokenAndAccountId = async (
   userId: string,
-  accessToken: string,
-  accountId: string
-) => {
+  accountId: string,
+  publicToken: string,
+  mask: string
+): Promise<BillowSimpleResponse> => {
   try {
-    await axios.post(`${baseUrl}/api/plaid/exchange`, {
-      userId,
-      accessToken,
-      accountId
-    });
-    return true;
+    await billowPost<CreateAndStoreAccessTokenRequest, BillowSimpleResponse>(
+      `${baseUrl}/api/plaid/exchange`,
+      {
+        userId,
+        publicToken,
+        accountId,
+        accountMask: mask
+      }
+    );
+
+    return {
+      message: "Access token and account information stored!",
+      isSuccess: true
+    };
   } catch (error: unknown) {
     handleError(error);
-    throw new Error("Failed to store access token and account ID");
+    return {
+      message: "Failed to store access token and account ID",
+      isSuccess: false
+    };
   }
 };

@@ -58,6 +58,8 @@ export const beginFundsTransfer = async (
   }
 };
 
+// Calls transfer/authorization/create
+// https://plaid.com/docs/transfer/creating-transfers/#authorizing-a-transfer
 const createTransferAuthorization = async (
   legalName: string,
   userId: string,
@@ -99,6 +101,7 @@ const createTransferAuthorization = async (
 };
 
 // Calls transfer/create
+// https://plaid.com/docs/transfer/creating-transfers/#initiating-a-transfer
 const initiateTransfer = async (
   authorizationId: string,
   accessToken: string,
