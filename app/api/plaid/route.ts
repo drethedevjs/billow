@@ -27,7 +27,8 @@ export async function GET() {
       depository: {
         account_subtypes: [
           DepositoryAccountSubtype.Checking,
-          DepositoryAccountSubtype.Savings
+          DepositoryAccountSubtype.Savings,
+          DepositoryAccountSubtype.MoneyMarket
         ]
       },
       credit: {
