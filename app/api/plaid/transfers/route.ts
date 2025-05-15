@@ -1,7 +1,7 @@
 import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferRequest";
 import { sleep } from "@/utils/billowHelper";
 import plaidClient from "@/utils/plaidClient";
-import { PlaidError, TransferCreateRequest, TransferType } from "plaid";
+import { PlaidError, TransferCreateRequest } from "plaid";
 
 export async function POST(request: Request) {
   const {
@@ -33,8 +33,7 @@ const initiateTransfer = async (
     access_token: accessToken,
     account_id: accountId,
     amount: amount,
-    description: "Water Bill",
-    type: TransferType.Debit
+    description: "Water Bill"
   };
 
   try {
