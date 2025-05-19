@@ -1,5 +1,5 @@
 "use client";
-import { UserContext } from "@/context/UserContext";
+import useUser from "@/hooks/useUser";
 import Service from "@/interfaces/account/Service";
 import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
 import { verifyAccessTokenAndGetAccountInformation } from "@/services/userService";
@@ -18,14 +18,14 @@ import {
   TableRow,
   TextInput
 } from "flowbite-react";
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import ConnectToPlaidButton from "./ConnectToPlaidButton";
 import LocationSelector from "./LocationSelector";
 import PaymentButton from "./PaymentButton";
 
 const Dashboard = () => {
   const whichAccount: number = 4;
-  const user = useContext(UserContext);
+  const user = useUser();
   const accountData = useBillowSelector((s) => s.account[whichAccount]);
 
   const [locationIdx, setLocationIdx] = useState<number>(0);

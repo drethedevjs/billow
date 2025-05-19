@@ -1,16 +1,15 @@
 "use client";
 
-import { UserContext } from "@/context/UserContext";
+import useUser from "@/hooks/useUser";
 import { User } from "@/interfaces/User";
 import { Button, Label, TextInput } from "flowbite-react";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 const Profile = () => {
-  const userContext = useContext(UserContext);
-  if (!userContext) throw new Error("userContext must be set.");
+  const signedInUser = useUser();
 
-  const [user, setUser] = useState<User>(userContext);
-  console.log("user", user);
+  const [user, setUser] = useState<User>(signedInUser);
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     console.log("name", e.target.name);
     console.log("value", e.target.value);

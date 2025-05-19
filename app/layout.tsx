@@ -1,5 +1,4 @@
 import PlaidProvider from "@/context/PlaidContext";
-import UserProvider from "@/context/UserContext";
 import Providers from "@/store/Providers";
 import type { Metadata } from "next";
 import Header from "../components/Header";
@@ -22,9 +21,7 @@ export default function RootLayout({
         <Header />
         <main className="container mx-auto min-h-screen flex flex-col">
           <Providers>
-            <UserProvider>
-              <PlaidProvider>{children}</PlaidProvider>
-            </UserProvider>
+            <PlaidProvider>{children}</PlaidProvider>
           </Providers>
         </main>
         <TheFooter />

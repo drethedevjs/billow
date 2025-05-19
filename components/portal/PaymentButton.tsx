@@ -1,11 +1,10 @@
-import { UserContext } from "@/context/UserContext";
+import useUser from "@/hooks/useUser";
 import Location from "@/interfaces/account/Location";
-import { User } from "@/interfaces/User";
 import { beginFundsTransfer as plaidPay } from "@/services/plaidService";
 import userAccountSlice from "@/store/userAccount";
 import { clearPaymentAmountInputs } from "@/utils/dashboardHelper";
 import { Button, Spinner } from "flowbite-react";
-import { Dispatch, SetStateAction, useContext, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 
@@ -24,7 +23,7 @@ const PaymentButton = ({
 }) => {
   const { payBill } = userAccountSlice.actions;
   const dispatch = useDispatch();
-  const user = useContext<User | null>(UserContext);
+  const user = useUser();
   if (!user) throw new Error("User not set.");
   const { fullName, id: userId } = user;
 
