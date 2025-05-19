@@ -3,9 +3,10 @@ import { useBillowSelector } from "@/store/configureStore";
 import { useMemo } from "react";
 
 export default function useUser(): User {
-  const account = useBillowSelector((state) => state.account[3]);
+  const dataArrayIdx = 4;
+  const account = useBillowSelector((state) => state.account[dataArrayIdx]);
 
-  const user = useMemo(
+  const user: User = useMemo(
     () => ({
       id: account.id.toString(),
       firstName: account.accountHolderFirstName,
@@ -13,7 +14,9 @@ export default function useUser(): User {
       fullName: `${account.accountHolderFirstName}${account.accountHolderLastName}`,
       address: account.address,
       email: account.email,
-      phone: account.phone
+      phone: account.phone,
+      dataArrayIdx: dataArrayIdx,
+      accountData: account
     }),
     [account]
   );

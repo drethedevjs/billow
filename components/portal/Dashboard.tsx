@@ -3,7 +3,6 @@ import useUser from "@/hooks/useUser";
 import Service from "@/interfaces/account/Service";
 import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
 import { verifyAccessTokenAndGetAccountInformation } from "@/services/userService";
-import { useBillowSelector } from "@/store/configureStore";
 import {
   calcTotalPayment,
   changeBackgroundToActiveAccount,
@@ -25,14 +24,11 @@ import LocationSelector from "./LocationSelector";
 import PaymentButton from "./PaymentButton";
 
 const Dashboard = () => {
-  const whichAccount: number = 4;
   const user = useUser();
-  const accountData = useBillowSelector((s) => s.account[whichAccount]);
-
   const [locationIdx, setLocationIdx] = useState<number>(0);
   const services: Service[] = useMemo(
-    () => accountData.locations[locationIdx].services,
-    [accountData.locations, locationIdx]
+    () => user.accountData.locations[locationIdx].services,
+    [user.accountData.locations, locationIdx]
   );
 
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
@@ -100,18 +96,19 @@ const Dashboard = () => {
       <h1>Dashboard</h1>
 
       <h2 className="mt-8 p-3 bg-accent text-white font-semibold rounded-sm">
-        {accountData.utilityCompanyName}
+        {user.accountData.utilityCompanyName}
       </h2>
 
       <p className="my-4">
         <span className="font-semibold">Customer Name: </span>
-        {accountData.accountHolderFirstName} {accountData.accountHolderLastName}
+        {user.accountData.accountHolderFirstName}{" "}
+        {user.accountData.accountHolderLastName}
       </p>
       <hr></hr>
       <div className="flex xl:flex-row flex-col mt-5">
         <div className="w-full xl:w-1/2">
           <LocationSelector
-            accountData={accountData}
+            accountData={user.accountData}
             selectLocation={selectLocation}
           />
         </div>
@@ -190,7 +187,7 @@ const Dashboard = () => {
               <PaymentButton
                 setServicePaymentAmounts={setServicePaymentAmounts}
                 totalPayment={calcTotalPayment(servicePaymentAmounts)}
-                location={accountData.locations[locationIdx]}
+                location={user.accountData.locations[locationIdx]}
                 servicePaymentAmounts={servicePaymentAmounts}
                 accountMask={
                   plaidConnectivityVerification?.accountInformation?.accountMask

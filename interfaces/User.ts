@@ -1,3 +1,4 @@
+import { AccountData } from "./account/AccountData";
 import Address from "./account/Address";
 
 export type User = {
@@ -8,4 +9,6 @@ export type User = {
   address: Address;
   email: string;
   phone: string;
+  dataArrayIdx: number;
+  accountData: AccountData;
 };
