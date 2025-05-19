@@ -7,7 +7,8 @@ import { useBillowSelector } from "@/store/configureStore";
 import {
   calcTotalPayment,
   changeBackgroundToActiveAccount,
-  changeToMostPrice
+  changeToMostPrice,
+  highlightFirstAccount
 } from "@/utils/dashboardHelper";
 import {
   Table,
@@ -42,8 +43,7 @@ const Dashboard = () => {
     useState<VerifyAccessTokenAndAccountInformation | null>(null);
 
   useEffect(() => {
-    const firstAccount = document.getElementsByClassName("account-number")[0];
-    firstAccount.classList.add("bg-accent");
+    highlightFirstAccount();
 
     const runFunction = async () => {
       const response = await verifyAccessTokenAndGetAccountInformation(

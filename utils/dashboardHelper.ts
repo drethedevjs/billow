@@ -46,3 +46,8 @@ export const clearPaymentAmountInputs = () => {
     if (input) input.value = "";
   }
 };
+
+export const highlightFirstAccount = () => {
+  const firstAccount = document.getElementsByClassName("account-number")[0];
+  firstAccount.classList.add("bg-accent");
+};
