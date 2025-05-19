@@ -51,3 +51,42 @@ export const highlightFirstAccount = () => {
   const firstAccount = document.getElementsByClassName("account-number")[0];
   firstAccount.classList.add("bg-accent");
 };
+
+export const calcTotalPaymentAmount = (
+  servicePaymentAmounts: Record<string, number>,
+  penaltyPayments: Record<string, number>
+) => {
+  const paymentAmounts = Object.values(servicePaymentAmounts);
+  const total = paymentAmounts.reduce((prev, current) => prev + current, 0);
+
+  const penaltyAmounts = Object.values(penaltyPayments);
+  const penaltyTotal = penaltyAmounts.reduce(
+    (prev, current) => prev + current,
+    0
+  );
+
+  return total + penaltyTotal;
+};
+
+export const calcPenaltyAndAmount = (
+  amount: number,
+  type: string,
+  services: Service[]
+) => {
+  const service = services.find((s) => s.type === type);
+  if (!service) throw new Error(`Cannot find the ${type} service.`);
+
+  if (amount > service.price + service.penalty)
+    amount = changeToMostPrice(type, service);
+
+  let penaltyAmt = 0;
+  if (amount >= service.penalty) {
+    penaltyAmt = service.penalty;
+    amount = amount - service.penalty;
+  } else {
+    penaltyAmt = amount;
+    amount = 0;
+  }
+
+  return { amount, penaltyAmt };
+};

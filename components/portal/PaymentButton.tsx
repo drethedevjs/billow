@@ -1,27 +1,37 @@
 import useUser from "@/hooks/useUser";
 import Location from "@/interfaces/account/Location";
+import ServicePaymentHistory from "@/interfaces/ServicePaymentHistory";
 import { beginFundsTransfer as plaidPay } from "@/services/plaidService";
+import paymentHistorySlice from "@/store/paymentHistory";
 import userAccountSlice from "@/store/userAccount";
-import { clearPaymentAmountInputs } from "@/utils/dashboardHelper";
+import { ServiceType } from "@/types/ServiceType";
+import {
+  calcTotalPaymentAmount,
+  clearPaymentAmountInputs
+} from "@/utils/dashboardHelper";
+import { getRandomId } from "@/utils/globalHelper";
 import { Button, Spinner } from "flowbite-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
-
 const PaymentButton = ({
   setServicePaymentAmounts,
   totalPayment,
   location,
   servicePaymentAmounts,
-  accountMask
+  accountMask,
+  penaltyPayments
 }: {
   setServicePaymentAmounts: Dispatch<SetStateAction<Record<string, number>>>;
   totalPayment: string;
   location: Location;
   servicePaymentAmounts: Record<string, number>;
   accountMask: string;
+  penaltyPayments: Record<string, number>;
 }) => {
   const { payBill } = userAccountSlice.actions;
+  const { addPaymentHistory } = paymentHistorySlice.actions;
+
   const dispatch = useDispatch();
   const user = useUser();
   if (!user) throw new Error("User not set.");
@@ -33,28 +43,51 @@ const PaymentButton = ({
     setIsProcessing(true);
 
     // TODO: Remove this mock delay
-    setTimeout(async () => {
-      const response = await plaidPay(fullName, userId, totalPayment);
-      if (!response.isSuccess) {
-        console.error(response.message);
-        // TODO: Add error toast
-        throw new Error(response.message);
-      }
+    const response = await plaidPay(fullName, userId, totalPayment);
+    if (!response.isSuccess) {
+      console.error(response.message);
+      // TODO: Add error toast
+      throw new Error(response.message);
+    }
 
-      Object.keys(servicePaymentAmounts).forEach((serviceType) => {
-        dispatch(
-          payBill({
-            accountNumber: location.accountNumber,
-            serviceName: serviceType,
-            payment: servicePaymentAmounts[serviceType]
-          })
-        );
+    const servicePaymentHistory: ServicePaymentHistory[] = [];
+    Object.keys(servicePaymentAmounts).forEach((service) => {
+      dispatch(
+        payBill({
+          accountNumber: location.accountNumber,
+          serviceName: service,
+          payment: servicePaymentAmounts[service]
+        })
+      );
+
+      servicePaymentHistory.push({
+        service: service as ServiceType,
+        amount: servicePaymentAmounts[service],
+        penaltyAmount: penaltyPayments[service]
       });
+    });
 
-      clearPaymentAmountInputs();
-      setServicePaymentAmounts({ "": 0 });
-      setIsProcessing(false);
-    }, 3000);
+    const total = calcTotalPaymentAmount(
+      servicePaymentAmounts,
+      penaltyPayments
+    );
+    const id = getRandomId();
+
+    dispatch(
+      addPaymentHistory({
+        id,
+        userId,
+        date: new Date().toISOString(),
+        total: total,
+        accountNumber: location.accountNumber,
+        address: location.address,
+        servicePaymentHistory
+      })
+    );
+
+    clearPaymentAmountInputs();
+    setServicePaymentAmounts({ "": 0 });
+    setIsProcessing(false);
   };
 
   return (

@@ -1,13 +1,14 @@
+import useUser from "@/hooks/useUser";
 import Address from "@/interfaces/account/Address";
 import { PaymentHistory as PayHist } from "@/interfaces/PaymentHistory";
-import { RootState } from "@/store/configureStore";
+import { useBillowSelector } from "@/store/configureStore";
 import moment from "moment";
 import React from "react";
-import { useSelector } from "react-redux";
 
 const PaymentHistory = () => {
-  const paymentHistory = useSelector<RootState, PayHist[]>(
-    (s) => s.paymentHistory
+  const user = useUser();
+  const paymentHistory: PayHist[] = useBillowSelector((s) =>
+    s.paymentHistory.filter((ph) => ph.userId === user.id)
   );
 
   const convertAddressToString = (address: Address) => {
@@ -52,7 +53,7 @@ const PaymentHistory = () => {
                                 sph.penaltyAmount ? "" : "hidden"
                               }`}
                             >
-                              Penalty- ${sph.penaltyAmount.toFixed(2)}
+                              Penalty - ${sph.penaltyAmount.toFixed(2)}
                             </li>
                           </React.Fragment>
                         );

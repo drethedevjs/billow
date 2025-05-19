@@ -4,9 +4,9 @@ import Service from "@/interfaces/account/Service";
 import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
 import { verifyAccessTokenAndGetAccountInformation } from "@/services/userService";
 import {
+  calcPenaltyAndAmount,
   calcTotalPayment,
   changeBackgroundToActiveAccount,
-  changeToMostPrice,
   highlightFirstAccount
 } from "@/utils/dashboardHelper";
 import {
@@ -32,6 +32,10 @@ const Dashboard = () => {
   );
 
   const [servicePaymentAmounts, setServicePaymentAmounts] = useState<
+    Record<string, number>
+  >({});
+
+  const [penaltyPayments, setPenaltyPayments] = useState<
     Record<string, number>
   >({});
 
@@ -62,24 +66,22 @@ const Dashboard = () => {
 
   const updateServicePaymentAmount = (
     e: React.ChangeEvent<HTMLInputElement>,
-    type: string
+    serviceType: string
   ): void => {
-    const amount = Number(e.target.value);
+    const { amount, penaltyAmt } = calcPenaltyAndAmount(
+      Number(e.target.value),
+      serviceType,
+      services
+    );
 
-    const service = services.find((s) => s.type === type);
-    if (!service) return;
-
-    if (amount > service.price) {
-      const mostCustomerCanPay = changeToMostPrice(type, service);
-      setServicePaymentAmounts((prev) => ({
+    setPenaltyPayments((prev) => {
+      return {
         ...prev,
-        [type]: mostCustomerCanPay
-      }));
+        [serviceType]: penaltyAmt
+      };
+    });
 
-      return;
-    }
-
-    setServicePaymentAmounts((prev) => ({ ...prev, [type]: amount }));
+    setServicePaymentAmounts((prev) => ({ ...prev, [serviceType]: amount }));
   };
 
   const totalDue = useMemo(() => {
@@ -192,6 +194,7 @@ const Dashboard = () => {
                 accountMask={
                   plaidConnectivityVerification?.accountInformation?.accountMask
                 }
+                penaltyPayments={penaltyPayments}
               />
             ) : (
               <ConnectToPlaidButton />
