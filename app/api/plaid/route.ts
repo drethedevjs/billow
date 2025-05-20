@@ -54,10 +54,9 @@ export async function GET() {
   } catch (error) {
     // handle error
     console.error("Server error: ", error);
-    return {
-      data: "",
+    return Response.json({
       message: await Response.error().text(),
       isSuccess: false
-    };
+    });
   }
 }
