@@ -11,7 +11,7 @@ export default function useUser(): User {
       id: account.id.toString(),
       firstName: account.accountHolderFirstName,
       lastName: account.accountHolderLastName,
-      fullName: `${account.accountHolderFirstName}${account.accountHolderLastName}`,
+      fullName: `${account.accountHolderFirstName} ${account.accountHolderLastName}`,
       address: account.address,
       email: account.email,
       phone: account.phone,
