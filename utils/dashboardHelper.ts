@@ -28,15 +28,17 @@ export const changeBackgroundToActiveAccount = (
 };
 
 export const calcTotalPayment = (
-  servicePaymentAmounts: Record<string, number>
+  servicePaymentAmounts: Record<string, number>,
+  penaltyPayments: Record<string, number>
 ) => {
   const paymentAmounts = Object.values(servicePaymentAmounts);
+  const penaltyAmounts = Object.values(penaltyPayments);
 
-  const total = paymentAmounts
-    .reduce((prev, current) => prev + current, 0)
-    .toFixed(2);
+  const total =
+    paymentAmounts.reduce((prev, current) => prev + current, 0) +
+    penaltyAmounts.reduce((prev, current) => prev + current, 0);
 
-  return total;
+  return total.toFixed(2);
 };
 
 export const clearPaymentAmountInputs = () => {

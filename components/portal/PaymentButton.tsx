@@ -11,11 +11,12 @@ import {
 } from "@/utils/dashboardHelper";
 import { getRandomId } from "@/utils/globalHelper";
 import { Button, Spinner } from "flowbite-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 const PaymentButton = ({
   setServicePaymentAmounts,
+  setPenaltyPayments,
   totalPayment,
   location,
   servicePaymentAmounts,
@@ -23,6 +24,7 @@ const PaymentButton = ({
   penaltyPayments
 }: {
   setServicePaymentAmounts: Dispatch<SetStateAction<Record<string, number>>>;
+  setPenaltyPayments: Dispatch<SetStateAction<Record<string, number>>>;
   totalPayment: string;
   location: Location;
   servicePaymentAmounts: Record<string, number>;
@@ -42,7 +44,6 @@ const PaymentButton = ({
   const pay = async () => {
     setIsProcessing(true);
 
-    // TODO: Remove this mock delay
     const response = await plaidPay(fullName, userId, totalPayment);
     if (!response.isSuccess) {
       console.error(response.message);
@@ -56,7 +57,7 @@ const PaymentButton = ({
         payBill({
           accountNumber: location.accountNumber,
           serviceName: service,
-          payment: servicePaymentAmounts[service]
+          payment: servicePaymentAmounts[service] + penaltyPayments[service]
         })
       );
 
@@ -71,8 +72,8 @@ const PaymentButton = ({
       servicePaymentAmounts,
       penaltyPayments
     );
-    const id = getRandomId();
 
+    const id = getRandomId();
     dispatch(
       addPaymentHistory({
         id,
@@ -86,9 +87,17 @@ const PaymentButton = ({
     );
 
     clearPaymentAmountInputs();
-    setServicePaymentAmounts({ "": 0 });
+    setServicePaymentAmounts({});
+    setPenaltyPayments({});
     setIsProcessing(false);
   };
+
+  const totalPenaltyPayments = useMemo(() => {
+    return Object.values(penaltyPayments).reduce(
+      (prev, current) => prev + current,
+      0
+    );
+  }, [penaltyPayments]);
 
   return (
     <>
@@ -105,7 +114,7 @@ const PaymentButton = ({
         <Button
           onClick={pay}
           className="payment-btn billow-btn-long"
-          disabled={Number(totalPayment) === 0}
+          disabled={Number(totalPayment) + totalPenaltyPayments === 0}
         >
           <BiDollarCircle className="mr-2 h-5 w-5" />
           Make Payment with XXXX{accountMask}

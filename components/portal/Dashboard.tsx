@@ -59,7 +59,8 @@ const Dashboard = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const selectLocation = (e: any, locationIdx: number) => {
-    setServicePaymentAmounts({ "": 0 });
+    setServicePaymentAmounts({});
+    setPenaltyPayments({});
     changeBackgroundToActiveAccount(e);
     setLocationIdx(locationIdx);
   };
@@ -136,7 +137,7 @@ const Dashboard = () => {
                         <TableCell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                           {s.type}
                         </TableCell>
-                        <TableCell>${s.price.toFixed(2)}</TableCell>
+                        <TableCell>${Number(s.price).toFixed(2)}</TableCell>
                         <TableCell>
                           <TextInput
                             id={s.type.toLowerCase()}
@@ -150,6 +151,7 @@ const Dashboard = () => {
                             onChange={(e) =>
                               updateServicePaymentAmount(e, s.type)
                             }
+                            disabled={s.price === 0}
                           />
                         </TableCell>
                       </TableRow>
@@ -179,7 +181,7 @@ const Dashboard = () => {
                     ${totalDue}
                   </TableCell>
                   <TableCell className="text-accent">
-                    ${calcTotalPayment(servicePaymentAmounts)}
+                    ${calcTotalPayment(servicePaymentAmounts, penaltyPayments)}
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -188,7 +190,11 @@ const Dashboard = () => {
             {plaidConnectivityVerification?.hasAccessToken ? (
               <PaymentButton
                 setServicePaymentAmounts={setServicePaymentAmounts}
-                totalPayment={calcTotalPayment(servicePaymentAmounts)}
+                setPenaltyPayments={setPenaltyPayments}
+                totalPayment={calcTotalPayment(
+                  servicePaymentAmounts,
+                  penaltyPayments
+                )}
                 location={user.accountData.locations[locationIdx]}
                 servicePaymentAmounts={servicePaymentAmounts}
                 accountMask={
