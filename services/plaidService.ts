@@ -2,7 +2,10 @@
 
 import { POST as transferPostHandler } from "@/app/api/plaid/existing-account/route";
 import { POST as transferCreateHandler } from "@/app/api/plaid/transfers/route";
-import { BillowResponse } from "@/interfaces/BillowResponse";
+import {
+  BillowResponse,
+  BillowSimpleResponse
+} from "@/interfaces/BillowResponse";
 import AuthorizeTransferCreateRequest from "@/interfaces/requests/AuthorizeTransferCreateRequest";
 import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferRequest";
 import { getAccessToken } from "@/lib/accessTokens";
@@ -17,7 +20,7 @@ export const beginFundsTransfer = async (
   legalName: string,
   userId: string,
   amount: string
-): Promise<BillowResponse<null>> => {
+): Promise<BillowSimpleResponse> => {
   const accessToken = getAccessToken(userId);
   const accountId = getAccountId(userId);
 
@@ -44,14 +47,12 @@ export const beginFundsTransfer = async (
     console.log("transfer initiated successfully");
 
     return {
-      data: null,
       message: "Transfer initiated successfully",
       isSuccess: true
     };
   } catch (error) {
     const axiosError = error as AxiosError;
     return {
-      data: null,
       message: axiosError.message,
       isSuccess: false
     };
