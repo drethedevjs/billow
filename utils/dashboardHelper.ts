@@ -92,3 +92,7 @@ export const calcPenaltyAndAmount = (
 
   return { amount, penaltyAmt };
 };
+
+export const hasHighlightedAccount = () => {
+  return document.getElementsByClassName("account-number bg-accent").length;
+};

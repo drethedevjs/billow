@@ -7,6 +7,7 @@ import {
   calcPenaltyAndAmount,
   calcTotalPayment,
   changeBackgroundToActiveAccount,
+  hasHighlightedAccount,
   highlightFirstAccount
 } from "@/utils/dashboardHelper";
 import {
@@ -43,7 +44,7 @@ const Dashboard = () => {
     useState<VerifyAccessTokenAndAccountInformation | null>(null);
 
   useEffect(() => {
-    highlightFirstAccount();
+    if (!hasHighlightedAccount()) highlightFirstAccount();
 
     const runFunction = async () => {
       const response = await verifyAccessTokenAndGetAccountInformation(
