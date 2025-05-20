@@ -20,6 +20,7 @@ export async function POST(request: Request) {
     accountId
   }: AuthorizeTransferCreateRequest = await request.json();
 
+  // Need this key so that retries won't create multiple authorizations
   const idempotencyKey = uuid();
   const response = await createAuthTransfer(
     userId,
@@ -30,7 +31,7 @@ export async function POST(request: Request) {
     idempotencyKey
   );
 
-  return response;
+  return Response.json(response);
 }
 
 const createAuthTransfer = async (

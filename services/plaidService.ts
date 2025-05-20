@@ -1,7 +1,7 @@
 "use server";
 
-import { POST as transferPostHandler } from "@/app/api/plaid/existing-account/route";
-import { POST as transferCreateHandler } from "@/app/api/plaid/transfers/route";
+import { POST as transferPostHandler } from "@/app/api/plaid/create-transfer/route";
+import { POST as transferCreateHandler } from "@/app/api/plaid/initiate-transfer/route";
 import {
   BillowResponse,
   BillowSimpleResponse
@@ -69,7 +69,7 @@ const createTransferAuthorization = async (
   accountId: string
 ): Promise<BillowResponse<string>> => {
   const request = BillowRequest<AuthorizeTransferCreateRequest>(
-    `${baseUrl}/api/plaid/existing-account`,
+    `${baseUrl}/api/plaid/create-transfer`,
     "POST",
     {
       legalName,
@@ -80,8 +80,8 @@ const createTransferAuthorization = async (
     }
   );
   const response = await transferPostHandler(request);
-
-  const { decision, id: authorizationId } = response.data.authorization;
+  const data = await response.json();
+  const { decision, id: authorizationId } = data.authorization;
   if (decision === TransferAuthorizationDecision.Declined)
     throw new Error("Authorization was declined!");
 
@@ -110,7 +110,7 @@ const initiateTransfer = async (
   amount: string
 ): Promise<BillowResponse<TransferCreateResponse | null>> => {
   const request = BillowRequest<InitiateTransferRequest>(
-    `${baseUrl}/api/plaid/transfers`,
+    `${baseUrl}/api/plaid/initiate-transfer`,
     "POST",
     {
       authorizationId,
@@ -121,9 +121,10 @@ const initiateTransfer = async (
   );
 
   const response = await transferCreateHandler(request);
+  const data = await response.json();
 
   return {
-    data: response.data,
+    data,
     message: "Transfer initiated successfully",
     isSuccess: true
   };
