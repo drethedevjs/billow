@@ -11,10 +11,9 @@ import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferReque
 import { getAccessToken } from "@/lib/accessTokens";
 import { getAccountId } from "@/lib/accounts";
 import { BillowRequest } from "@/utils/billowHelper";
+import { baseUrl } from "@/utils/globalHelper";
 import { AxiosError } from "axios";
 import { TransferAuthorizationDecision, TransferCreateResponse } from "plaid";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export const beginFundsTransfer = async (
   legalName: string,

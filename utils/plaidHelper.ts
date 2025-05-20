@@ -1,8 +1,7 @@
 import { storeAccessTokenAndAccountId } from "@/services/userService";
 import axios from "axios";
 import { PlaidLinkError, PlaidLinkOnSuccessMetadata } from "react-plaid-link";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import { baseUrl } from "./globalHelper";
 
 const plaidHelper = {
   getLinkToken: async () => {

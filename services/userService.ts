@@ -7,8 +7,7 @@ import {
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
 import { handleError } from "@/utils/errorHelper";
-
-const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+import { baseUrl } from "@/utils/globalHelper";
 
 export const verifyAccessTokenAndGetAccountInformation = async (
   userId: string
