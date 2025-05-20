@@ -1,20 +1,20 @@
 import { Toast } from "flowbite-react";
-import { FaTelegramPlane } from "react-icons/fa";
+import { FaThumbsUp } from "react-icons/fa";
 
 export function BillowToast({
   toastIsShowing,
-  toastMsg
+  toastMsg = null
 }: {
   toastIsShowing: boolean;
-  toastMsg: string;
+  toastMsg: string | null;
 }) {
   return (
     <Toast
-      className={`absolute bottom-10 right-10 animate-bounce ${
-        toastIsShowing ? "block" : "hidden"
+      className={`fixed bottom-10 right-10 animate-bounce flex-row ${
+        toastIsShowing ? "flex" : "hidden"
       }`}
     >
-      <FaTelegramPlane className="h-5 w-5 text-cyan-600 dark:text-cyan-500" />
+      <FaThumbsUp className="h-5 w-5 text-accent dark:text-secondary" />
       <div className="pl-4 text-sm font-normal">{toastMsg ?? "Success!"}</div>
     </Toast>
   );
