@@ -20,11 +20,18 @@ const Portal = () => {
     state.inbox.filter((msg) => !msg.read).length.toString()
   );
 
-  const selectTab = (tabName: string) => {
+  const highlightSidebarItem = (tabName: string) => {
     const activeMenuItem = document.getElementsByClassName(
       "active-sidebar-item sidebar-item"
     )[0];
     activeMenuItem.classList.remove("active-sidebar-item");
+
+    const selectedMenuItem = document.getElementById(tabName);
+    selectedMenuItem!.classList.add("active-sidebar-item");
+  };
+
+  const selectTab = (tabName: string) => {
+    highlightSidebarItem(tabName);
 
     const selectedMenuItem = document.getElementById(tabName);
     selectedMenuItem!.classList.add("active-sidebar-item");
@@ -49,7 +56,7 @@ const Portal = () => {
     <div className="py-10 flex md:flex-row flex-col">
       <Sidebar
         aria-label="Default sidebar example"
-        className="w-full xl:w-auto"
+        className="w-full md:w-3/12 xl:w-auto"
       >
         <SidebarItems>
           <SidebarItemGroup>
@@ -89,7 +96,7 @@ const Portal = () => {
           </SidebarItemGroup>
         </SidebarItems>
       </Sidebar>
-      <div className="p-10 w-full">{renderContent()}</div>
+      <div className="p-10 w-full md:w-9/12">{renderContent()}</div>
     </div>
   );
 };
