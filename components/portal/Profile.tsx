@@ -3,7 +3,7 @@
 import useUser from "@/hooks/useUser";
 import { User } from "@/interfaces/User";
 import { Button, Label, TextInput } from "flowbite-react";
-import { ChangeEvent, useContext, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 const Profile = () => {
   const signedInUser = useUser();
@@ -52,34 +52,36 @@ const Profile = () => {
       <h1>Profile</h1>
 
       <form className="space-y-6 max-w-xl mt-10 p-6 bg-white rounded-lg shadow-md border border-accent">
-        <div>
-          <Label className="font-semibold" htmlFor="firstName">
-            First Name
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="firstName"
-            name="firstName"
-            type="text"
-            onChange={handleInputChange}
-            value={user.firstName}
-            required
-          />
-        </div>
+        <div className="flex flex-row gap-4">
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="firstName">
+              First Name
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="firstName"
+              name="firstName"
+              type="text"
+              onChange={handleInputChange}
+              value={user.firstName}
+              required
+            />
+          </div>
 
-        <div>
-          <Label className="font-semibold" htmlFor="lastName">
-            Last Name
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="lastName"
-            name="lastName"
-            type="text"
-            value={user.lastName}
-            onChange={handleInputChange}
-            required
-          />
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="lastName">
+              Last Name
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="lastName"
+              name="lastName"
+              type="text"
+              value={user.lastName}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
         </div>
 
         <div>
@@ -126,36 +128,38 @@ const Profile = () => {
           />
         </div>
 
-        <div>
-          <Label className="font-semibold" htmlFor="state">
-            State
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="state"
-            name="state"
-            type="text"
-            value={user.address.state}
-            onChange={handleAddressInputChange}
-            required
-          />
-        </div>
+        <div className="flex flex-row gap-4">
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="state">
+              State
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="state"
+              name="state"
+              type="text"
+              value={user.address.state}
+              onChange={handleAddressInputChange}
+              required
+            />
+          </div>
 
-        <div>
-          <Label className="font-semibold" htmlFor="postal">
-            Postal Code
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="postal"
-            name="postal"
-            type="text"
-            inputMode="numeric"
-            max={99999}
-            value={user.address.postal}
-            onChange={handleAddressInputChange}
-            required
-          />
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="postal">
+              Postal Code
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="postal"
+              name="postal"
+              type="text"
+              inputMode="numeric"
+              max={99999}
+              value={user.address.postal}
+              onChange={handleAddressInputChange}
+              required
+            />
+          </div>
         </div>
 
         <div>
@@ -186,31 +190,33 @@ const Profile = () => {
           />
         </div>
 
-        <div>
-          <Label className="font-semibold" htmlFor="phone">
-            Phone Number
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="phone"
-            name="phone"
-            type="tel"
-            value={user.phone}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+        <div className="flex flex-row gap-4">
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="phone">
+              Phone Number
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="phone"
+              name="phone"
+              type="tel"
+              value={user.phone}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
 
-        <div>
-          <Label className="font-semibold" htmlFor="altPhone">
-            Alternate Phone Number
-          </Label>
-          <TextInput
-            className="mt-2"
-            id="altPhone"
-            name="altPhone"
-            type="tel"
-          />
+          <div className="w-1/2">
+            <Label className="font-semibold" htmlFor="altPhone">
+              Alternate Phone Number
+            </Label>
+            <TextInput
+              className="mt-2"
+              id="altPhone"
+              name="altPhone"
+              type="tel"
+            />
+          </div>
         </div>
 
         <div className="pt-4">
