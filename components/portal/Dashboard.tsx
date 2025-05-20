@@ -116,6 +116,7 @@ const Dashboard = () => {
             selectLocation={selectLocation}
           />
         </div>
+        <hr className="flex lg:hidden my-10 border-accent border"></hr>
         <div className="w-full xl:w-1/2">
           <h3 className="text-center mb-4">Services</h3>
           <div className="px-4 pb-5">
