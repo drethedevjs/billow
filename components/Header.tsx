@@ -28,7 +28,7 @@ const Header = () => {
         >
           Login
         </a>
-        <Button className="bg-accent dark:bg-accent transition-colors dark:hover:bg-white dark:hover:text-accent">
+        <Button className="bg-accent dark:bg-accent transition-colors dark:hover:bg-white dark:hover:text-accent hover:bg-white border border-accent focus:!ring-0 hover:text-accent">
           Sign Up
         </Button>
         <NavbarToggle />
@@ -38,9 +38,9 @@ const Header = () => {
         <NavLink href="/about">About</NavLink>
         <NavLink href="/faq">FAQ</NavLink>
         <NavLink href="/portal">Dashboard</NavLink>
-        <NavLink href="/contact" disable={true}>
+        {/* <NavLink href="/contact" disable={true}>
           Contact
-        </NavLink>
+        </NavLink> */}
       </NavbarCollapse>
     </Navbar>
   );
