@@ -1,9 +1,10 @@
 "use client";
 
+import { BillowToastContext } from "@/context/ToastContext";
 import useUser from "@/hooks/useUser";
 import { User } from "@/interfaces/User";
 import { Button, Label, TextInput } from "flowbite-react";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useContext, useState } from "react";
 
 const Profile = () => {
   const signedInUser = useUser();
@@ -47,8 +48,16 @@ const Profile = () => {
     });
   };
 
+  const { setToastMsg, showToast } = useContext(BillowToastContext);
+
+  const showMeThaToast = () => {
+    setToastMsg("Profile updated successfully!");
+    showToast();
+  };
+
   return (
     <section id="profile">
+      <button onClick={showMeThaToast}>Show me tha toast</button>
       <h1>Profile</h1>
 
       <form className="space-y-6 max-w-xl mt-10 p-6 bg-white rounded-lg shadow-md border border-accent">

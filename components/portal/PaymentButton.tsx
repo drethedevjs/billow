@@ -1,3 +1,4 @@
+import { BillowToastContext } from "@/context/ToastContext";
 import useUser from "@/hooks/useUser";
 import Location from "@/interfaces/account/Location";
 import ServicePaymentHistory from "@/interfaces/ServicePaymentHistory";
@@ -11,7 +12,7 @@ import {
 } from "@/utils/dashboardHelper";
 import { getRandomId } from "@/utils/globalHelper";
 import { Button, Spinner } from "flowbite-react";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useMemo, useState } from "react";
 import { BiDollarCircle } from "react-icons/bi";
 import { useDispatch } from "react-redux";
 const PaymentButton = ({
@@ -40,6 +41,12 @@ const PaymentButton = ({
   const { fullName, id: userId } = user;
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const { setToastMsg, showToast } = useContext(BillowToastContext);
+
+  const showSuccessToast = () => {
+    setToastMsg("Payment processed successfully!");
+    showToast();
+  };
 
   const pay = async () => {
     setIsProcessing(true);
@@ -50,6 +57,8 @@ const PaymentButton = ({
       // TODO: Add error toast
       throw new Error(response.message);
     }
+
+    showSuccessToast();
 
     const servicePaymentHistory: ServicePaymentHistory[] = [];
     Object.keys(servicePaymentAmounts).forEach((service) => {

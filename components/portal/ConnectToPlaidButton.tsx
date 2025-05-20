@@ -1,10 +1,19 @@
-import { PlaidContext } from "@/context/PlaidContext";
 import plaidHelper from "@/utils/plaidHelper";
-import { useContext } from "react";
+import { useEffect, useState } from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 
 const ConnectToPlaidButton = () => {
-  const linkToken = useContext(PlaidContext);
+  // const linkToken = useContext(PlaidContext);
+  const [linkToken, setLinkToken] = useState<string>("");
+
+  useEffect(() => {
+    const fetchLinkToken = async () => {
+      const response = await plaidHelper.getLinkToken();
+      setLinkToken(response.data);
+    };
+
+    fetchLinkToken();
+  }, []);
 
   const config: PlaidLinkOptions = {
     // onSuccess runs when users links their bank accounts.
