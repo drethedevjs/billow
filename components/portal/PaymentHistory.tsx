@@ -40,8 +40,8 @@ const PaymentHistory = () => {
                   <td>${ph.total.toFixed(2)}</td>
                 </tr>
                 <tr className="border-b-4 bg-neutral-200 font-semibold text-primary">
-                  <td colSpan={4} className="">
-                    <ul className="">
+                  <td colSpan={4}>
+                    <ul>
                       {ph.servicePaymentHistory.map((sph) => {
                         return (
                           <React.Fragment key={sph.service}>
