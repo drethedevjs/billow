@@ -2,9 +2,10 @@ import { handleError } from "@/utils/errorHelper";
 import { initializeDB } from "@/utils/serverHelper";
 
 export async function POST(request: Request) {
-  const secret = await request.json();
+  const { secret } = await request.json();
+
   if (secret !== process.env.INITDB_SECRET) {
-    throw new Error("Not Found");
+    return Response.json("Not Found", { status: 404 });
   }
   try {
     initializeDB();

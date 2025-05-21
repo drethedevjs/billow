@@ -3,7 +3,6 @@
 import Database from "better-sqlite3";
 
 export async function initializeDB() {
-  console.trace("Initializing database");
   // Open (or create) the database file
   const db = new Database("billow.db");
   // It's better to have the access token be stored in a table that links to a
