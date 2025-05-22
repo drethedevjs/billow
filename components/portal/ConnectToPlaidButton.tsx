@@ -38,7 +38,6 @@ const ConnectToPlaidButton = () => {
         width={500}
         height={500}
       />
-      {/* Connect to Plaid */}
     </button>
   );
 };
