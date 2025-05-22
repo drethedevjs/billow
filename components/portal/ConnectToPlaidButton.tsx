@@ -1,7 +1,7 @@
 import plaidHelper from "@/utils/plaidHelper";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
-
 const ConnectToPlaidButton = () => {
   // const linkToken = useContext(PlaidContext);
   const [linkToken, setLinkToken] = useState<string>("");
@@ -27,10 +27,18 @@ const ConnectToPlaidButton = () => {
   return (
     <button
       onClick={() => open()}
-      className="billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
+      className="billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center"
       disabled={!linkToken}
     >
-      Connect to Plaid
+      <span className="text-sm">Connect to&nbsp;</span>
+      <Image
+        src="https://cdn.brandfetch.io/idly0-MZ4j/theme/light/logo.svg?c=1dxbfHSJFAPEGdCLU4o5B"
+        alt="Plaid Logo"
+        className="w-12 h-12"
+        width={500}
+        height={500}
+      />
+      {/* Connect to Plaid */}
     </button>
   );
 };
