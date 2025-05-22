@@ -55,7 +55,7 @@ const Dashboard = () => {
         setPlaidConnectivityVerification(response.data);
     };
 
-    runFunction();
+    if (process.env.NODE_ENV === "development") runFunction();
   }, [user]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
