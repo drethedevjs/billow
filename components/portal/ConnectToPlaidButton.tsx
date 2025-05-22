@@ -12,7 +12,7 @@ const ConnectToPlaidButton = () => {
       setLinkToken(response.data);
     };
 
-    fetchLinkToken();
+    if (process.env.NODE_ENV === "development") fetchLinkToken();
   }, []);
 
   const config: PlaidLinkOptions = {
@@ -28,6 +28,7 @@ const ConnectToPlaidButton = () => {
     <button
       onClick={() => open()}
       className="billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300"
+      disabled={!linkToken}
     >
       Connect to Plaid
     </button>

@@ -47,15 +47,24 @@ const Dashboard = () => {
     if (!hasHighlightedAccount()) highlightFirstAccount();
 
     const runFunction = async () => {
-      const response = await verifyAccessTokenAndGetAccountInformation(
-        user!.id
-      );
+      const inDevelopment = process.env.NODE_ENV === "development";
+      if (inDevelopment) {
+        const response = await verifyAccessTokenAndGetAccountInformation(
+          user!.id
+        );
 
-      if (response.isSuccess && response.data)
-        setPlaidConnectivityVerification(response.data);
+        const info = response.data;
+
+        if (response.isSuccess && info) setPlaidConnectivityVerification(info);
+      } else {
+        setPlaidConnectivityVerification({
+          hasAccessToken: true,
+          accountInformation: { accountId: "000", accountMask: "000" }
+        });
+      }
     };
 
-    if (process.env.NODE_ENV === "development") runFunction();
+    runFunction();
   }, [user]);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
