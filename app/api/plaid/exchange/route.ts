@@ -1,6 +1,6 @@
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
-import { getAccessToken, storeAccessToken } from "@/lib/accessTokens";
-import { getAccountInformation, storeAccountInformation } from "@/lib/accounts";
+import { getAccountInformation } from "@/lib/accounts";
+import { getAccessToken } from "@/services/plaidService";
 import plaidClient from "@/utils/plaidClient";
 
 export async function GET(request: Request) {
@@ -13,19 +13,16 @@ export async function GET(request: Request) {
     });
   }
 
-  const hasAccessToken = Boolean(getAccessToken(userId));
+  const response = await getAccessToken(userId);
+  const hasAccessToken = Boolean(response.data);
   const accountInformation = getAccountInformation(userId);
 
   return Response.json({ hasAccessToken, accountInformation });
 }
 
 export async function POST(request: Request) {
-  const {
-    publicToken,
-    accountId,
-    accountMask,
-    userId
-  }: CreateAndStoreAccessTokenRequest = await request.json();
+  const { publicToken }: CreateAndStoreAccessTokenRequest =
+    await request.json();
 
   // calling /item/public_token/exchange endpoint
   const response = await plaidClient.itemPublicTokenExchange({
@@ -33,9 +30,10 @@ export async function POST(request: Request) {
   });
 
   const accessToken = response.data.access_token;
+  return Response.json(accessToken);
 
-  storeAccessToken(accessToken, userId);
-  storeAccountInformation({ userId, accountId, accountMask });
+  // storeAccessToken(accessToken, userId);
+  // storeAccountInformation({ userId, accountId, accountMask });
 
-  return Response.json({ success: true });
+  // return Response.json({ success: true });
 }

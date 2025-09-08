@@ -1,9 +1,9 @@
+import useUser from "@/hooks/useUser";
 import plaidHelper from "@/utils/plaidHelper";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 const ConnectToPlaidButton = () => {
-  // const linkToken = useContext(PlaidContext);
   const [linkToken, setLinkToken] = useState<string>("");
 
   useEffect(() => {
@@ -15,9 +15,30 @@ const ConnectToPlaidButton = () => {
     if (process.env.NODE_ENV === "development") fetchLinkToken();
   }, []);
 
+  const user = useUser();
+
   const config: PlaidLinkOptions = {
     // onSuccess runs when users links their bank accounts.
-    onSuccess: plaidHelper.createAndStoreAccessToken,
+    onSuccess: async (publicToken, metadata) => {
+      const response = await plaidHelper.createAccessToken(
+        publicToken,
+        metadata,
+        user.id
+      );
+
+      const {id: accountId, mask} = metadata.accounts[0];
+
+      const accessToken = response.data;
+      const storedResponse = await plaidHelper.storeAccessToken(
+        accessToken,
+        user.id
+      );
+
+      if (!storedResponse.isSuccess) throw new Error(storedResponse.message);
+      
+      const storeAccountInfoResponse = await plaidHelper.storeAccountInformation(accountId, mask, user.id);
+      if (!storeAccountInfoResponse.isSuccess) throw new Error(storedResponse.message);
+    },
     onExit: plaidHelper.logErrorsToConsole,
     // onEvent: (eventName, metadata) => {},
     token: linkToken

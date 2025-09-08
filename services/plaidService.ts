@@ -7,20 +7,79 @@ import {
   BillowSimpleResponse
 } from "@/interfaces/BillowResponse";
 import AuthorizeTransferCreateRequest from "@/interfaces/requests/AuthorizeTransferCreateRequest";
+import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
 import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferRequest";
-import { getAccessToken } from "@/lib/accessTokens";
+import GetAccessTokenResponse from "@/interfaces/responses/GetAccessTokenResponse";
 import { getAccountId } from "@/lib/accounts";
+import { billowGet, billowPost } from "@/utils/axiosHelper";
 import { BillowRequest } from "@/utils/billowHelper";
+import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
+import { PLAID_EXCHANGE_URL } from "@/utils/constants/plaidConstants";
+import { handleError } from "@/utils/errorHelper";
 import { baseUrl } from "@/utils/globalHelper";
 import { AxiosError } from "axios";
 import { TransferAuthorizationDecision, TransferCreateResponse } from "plaid";
+
+export const createAccessToken = async (
+  userId: string,
+  accountId: string,
+  publicToken: string,
+  mask: string
+): Promise<BillowResponse<string>> => {
+  const response = await billowPost<CreateAndStoreAccessTokenRequest, string>(
+    `${baseUrl}/${PLAID_EXCHANGE_URL}`,
+    {
+      userId,
+      publicToken,
+      accountId,
+      accountMask: mask
+    }
+  );
+
+  return {
+    data: response.data,
+    message: "Access token created!",
+    isSuccess: true
+  };
+};
+
+export const getAccessToken = async (
+  userId: string
+): Promise<BillowResponse<string>> => {
+  try {
+    const response = await billowGet<GetAccessTokenResponse>(
+      `${baseUrl}/${MONGO_ROUTE_URL}?accessTokenByUserId=${userId}`
+    );
+    // const response = await billowGet<GetAccessTokenResponse>(
+    //   `${baseUrl}/${MONGO_ROUTE_URL}?userId=${userId}`
+    // );
+
+    const { accessToken } = response.data;
+    console.log("this is the access token", accessToken);
+    return {
+      data: accessToken,
+      message: accessToken
+        ? "Access token retrieved!"
+        : "User does not have access token.",
+      isSuccess: true
+    };
+  } catch (error) {
+    handleError(error);
+
+    return {
+      data: "",
+      message: `Oops: ${error}!`,
+      isSuccess: false
+    };
+  }
+};
 
 export const beginFundsTransfer = async (
   legalName: string,
   userId: string,
   amount: string
 ): Promise<BillowSimpleResponse> => {
-  const accessToken = getAccessToken(userId);
+  const accessToken = (await getAccessToken(userId)).data;
   const accountId = getAccountId(userId);
 
   if (!accessToken) throw new Error("User doesn't have access token.");
