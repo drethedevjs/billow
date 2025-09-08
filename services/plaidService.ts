@@ -20,8 +20,18 @@ export const beginFundsTransfer = async (
   userId: string,
   amount: string
 ): Promise<BillowSimpleResponse> => {
-  const accessToken = getAccessToken(userId);
-  const accountId = getAccountId(userId);
+  let accessToken;
+  let accountId;
+  try {
+    accessToken = getAccessToken(userId);
+    accountId = getAccountId(userId);
+  } catch (err: any) {
+    console.error("Error getting the access token and/or account id: ", err);
+    return {
+      message: err,
+      isSuccess: false
+    };
+  }
 
   if (!accessToken) throw new Error("User doesn't have access token.");
   if (!accountId) throw new Error("User doesn't have an account linked.");
