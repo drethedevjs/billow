@@ -38,8 +38,7 @@ const initiateTransfer = async (
 
   try {
     const response = await plaidClient.transferCreate(transferCreateReq);
-
-    return response;
+    return response.data;
   } catch (error: unknown) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const plaidError = (error as any).response?.data as PlaidError;

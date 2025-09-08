@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     idempotencyKey
   );
 
-  return Response.json(response);
+  return Response.json(response.data);
 }
 
 const createAuthTransfer = async (
