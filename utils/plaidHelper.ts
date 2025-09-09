@@ -1,3 +1,4 @@
+"use client";
 import { storeAccessTokenAndAccountId } from "@/services/userService";
 import axios from "axios";
 import { PlaidLinkError, PlaidLinkOnSuccessMetadata } from "react-plaid-link";
@@ -23,7 +24,14 @@ const plaidHelper = {
     // support one account at a time.
     const { id: accountId, mask } = metadata.accounts[0];
 
-    await storeAccessTokenAndAccountId("1234", accountId, publicToken, mask);
+    const x = await storeAccessTokenAndAccountId(
+      "1234",
+      accountId,
+      publicToken,
+      mask
+    );
+
+    console.log("This also proves that the billowdb exists: ", x);
   },
   logErrorsToConsole: (err: PlaidLinkError | null) => {
     if (err) console.error(err);

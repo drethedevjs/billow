@@ -52,7 +52,7 @@ const Dashboard = () => {
         const response = await verifyAccessTokenAndGetAccountInformation(
           user!.id
         );
-
+        console.log("This proves that the billow db exists:", response.data);
         const info = response.data;
 
         if (response.isSuccess && info) setPlaidConnectivityVerification(info);
@@ -85,14 +85,14 @@ const Dashboard = () => {
       services
     );
 
-    setPenaltyPayments((prev) => {
+    setPenaltyPayments(prev => {
       return {
         ...prev,
         [serviceType]: penaltyAmt
       };
     });
 
-    setServicePaymentAmounts((prev) => ({ ...prev, [serviceType]: amount }));
+    setServicePaymentAmounts(prev => ({ ...prev, [serviceType]: amount }));
   };
 
   const totalDue = useMemo(() => {
@@ -159,7 +159,7 @@ const Dashboard = () => {
                             step="0.01"
                             max={s.price + s.penalty}
                             addon="$"
-                            onChange={(e) =>
+                            onChange={e =>
                               updateServicePaymentAmount(e, s.type)
                             }
                             disabled={s.price === 0}
