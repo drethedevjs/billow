@@ -22,8 +22,3 @@ export async function GET(request: NextRequest) {
 
   throw new Error(`${MONGO_ROUTE_URL}/account: No implementation.`);
 }
-
-export async function POST(request: Request) {
-  const mongoClient = await getMongoClient();
-  mongoClient?.db("Bill");
-}

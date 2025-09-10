@@ -1,9 +1,9 @@
+import PlaidErrorWithResponse from "@/interfaces/PlaidErrorWithResponse";
 import AuthorizeTransferCreateRequest from "@/interfaces/requests/AuthorizeTransferCreateRequest";
 import { sleep } from "@/utils/billowHelper";
 import plaidClient from "@/utils/plaidClient";
 import {
   ACHClass,
-  PlaidError,
   TransferAuthorizationCreateRequest,
   TransferNetwork,
   TransferType
@@ -66,8 +66,10 @@ const createAuthTransfer = async (
 
     return response;
   } catch (error) {
-    const err = error as PlaidError;
-    const plaidError = err.response.data;
+    const err = error as PlaidErrorWithResponse;
+    const plaidError = err.response?.data
+      ? err.response.data
+      : { error_code: "UNKNOWN", error_message: "Unknown error" };
 
     if (
       remainingTries > 0 &&
