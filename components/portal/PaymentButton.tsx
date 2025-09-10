@@ -41,10 +41,16 @@ const PaymentButton = ({
   const { fullName, id: userId } = user;
 
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const { setToastMsg, showToast } = useContext(BillowToastContext);
+  const { setToastMsg, showToast, setIsError } = useContext(BillowToastContext);
 
   const showSuccessToast = () => {
     setToastMsg("Payment processed successfully!");
+    showToast();
+  };
+
+  const showFailToast = (msg: string) => {
+    setToastMsg(msg);
+    setIsError(true);
     showToast();
   };
 
@@ -55,13 +61,15 @@ const PaymentButton = ({
     if (!response.isSuccess) {
       console.error(response.message);
       // TODO: Add error toast
-      throw new Error(response.message);
+      showFailToast(response.message);
+      setIsProcessing(false);
+      return;
     }
 
     showSuccessToast();
 
     const servicePaymentHistory: ServicePaymentHistory[] = [];
-    Object.keys(servicePaymentAmounts).forEach((service) => {
+    Object.keys(servicePaymentAmounts).forEach(service => {
       dispatch(
         payBill({
           accountNumber: location.accountNumber,

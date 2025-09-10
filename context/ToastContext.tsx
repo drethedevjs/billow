@@ -5,11 +5,13 @@ import { createContext, useState } from "react";
 
 export const BillowToastContext = createContext<BillowToastContextType>({
   showToast: () => {},
-  setToastMsg: () => {}
+  setToastMsg: () => {},
+  setIsError: () => {}
 });
 
 export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
   const [toastIsShowing, setToastIsShowing] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
   const [toastMsg, setToastMsg] = useState<string | null>(null);
 
   const showToast = () => {
@@ -19,9 +21,13 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
     }, 5000);
   };
   return (
-    <BillowToastContext.Provider value={{ showToast, setToastMsg }}>
+    <BillowToastContext.Provider value={{ showToast, setToastMsg, setIsError }}>
       {children}
-      <BillowToast toastIsShowing={toastIsShowing} toastMsg={toastMsg} />
+      <BillowToast
+        toastIsShowing={toastIsShowing}
+        toastMsg={toastMsg}
+        isError={isError}
+      />
     </BillowToastContext.Provider>
   );
 };

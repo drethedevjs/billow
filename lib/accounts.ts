@@ -22,6 +22,7 @@ export const getAccountInformation = (userId: string) => {
 };
 
 export const getAccountId = (userId: string) => {
+  throw new Error("getAccountId from the accounts.ts in lib is obsolete!");
   const row = db
     .prepare<[string], { account_id: string }>(
       "SELECT account_id FROM accounts WHERE user_id = ?"

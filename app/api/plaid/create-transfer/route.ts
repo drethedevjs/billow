@@ -66,7 +66,9 @@ const createAuthTransfer = async (
 
     return response;
   } catch (error) {
-    const plaidError = error as PlaidError;
+    const err = error as PlaidError;
+    const plaidError = err.response.data;
+
     if (
       remainingTries > 0 &&
       (plaidError.error_code === "RATE_LIMIT_EXCEEDED" ||

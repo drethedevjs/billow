@@ -54,8 +54,11 @@ const Dashboard = () => {
         );
 
         const info = response.data;
-
-        if (response.isSuccess && info) setPlaidConnectivityVerification(info);
+        if (response.isSuccess && info) {
+          setPlaidConnectivityVerification(info);
+        } else {
+          console.error(response.message);
+        }
       } else {
         setPlaidConnectivityVerification({
           hasAccessToken: true,
@@ -85,14 +88,14 @@ const Dashboard = () => {
       services
     );
 
-    setPenaltyPayments((prev) => {
+    setPenaltyPayments(prev => {
       return {
         ...prev,
         [serviceType]: penaltyAmt
       };
     });
 
-    setServicePaymentAmounts((prev) => ({ ...prev, [serviceType]: amount }));
+    setServicePaymentAmounts(prev => ({ ...prev, [serviceType]: amount }));
   };
 
   const totalDue = useMemo(() => {
@@ -159,7 +162,7 @@ const Dashboard = () => {
                             step="0.01"
                             max={s.price + s.penalty}
                             addon="$"
-                            onChange={(e) =>
+                            onChange={e =>
                               updateServicePaymentAmount(e, s.type)
                             }
                             disabled={s.price === 0}
