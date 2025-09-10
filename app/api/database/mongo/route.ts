@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
     const collection = db.collection("Users");
     const user: User | null = await collection.findOne<User>({ userId });
 
-    return Response.json({ accessToken: user?.accessToken });
+    return Response.json({ accessToken: user?.plaidAccessToken });
   }
 }
 

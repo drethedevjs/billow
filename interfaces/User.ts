@@ -10,6 +10,6 @@ export type User = {
   email: string;
   phone: string;
   dataArrayIdx: number;
-  accessToken: string;
+  plaidAccessToken: string;
   accountData: AccountData;
 };

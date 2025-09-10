@@ -4,7 +4,7 @@ import { useMemo } from "react";
 
 export default function useUser(): User {
   const dataArrayIdx = 4; // selector which account and user to use.
-  const account = useBillowSelector((state) => state.account[dataArrayIdx]);
+  const account = useBillowSelector(state => state.account[dataArrayIdx]);
 
   const user: User = useMemo(
     () => ({
@@ -16,6 +16,7 @@ export default function useUser(): User {
       email: account.email,
       phone: account.phone,
       dataArrayIdx: dataArrayIdx,
+      plaidAccessToken: "",
       accountData: account
     }),
     [account]
