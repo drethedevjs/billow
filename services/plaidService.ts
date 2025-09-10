@@ -10,7 +10,7 @@ import AuthorizeTransferCreateRequest from "@/interfaces/requests/AuthorizeTrans
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
 import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferRequest";
 import GetAccessTokenResponse from "@/interfaces/responses/GetAccessTokenResponse";
-import { getAccountId } from "@/lib/accounts";
+import { getAccountId } from "@/services/accountService";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
 import { BillowRequest } from "@/utils/billowHelper";
 import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
@@ -27,7 +27,7 @@ export const createAccessToken = async (
   mask: string
 ): Promise<BillowResponse<string>> => {
   const response = await billowPost<CreateAndStoreAccessTokenRequest, string>(
-    `${baseUrl}/${PLAID_EXCHANGE_URL}`,
+    PLAID_EXCHANGE_URL,
     {
       userId,
       publicToken,
@@ -48,14 +48,11 @@ export const getAccessToken = async (
 ): Promise<BillowResponse<string>> => {
   try {
     const response = await billowGet<GetAccessTokenResponse>(
-      `${baseUrl}/${MONGO_ROUTE_URL}?accessTokenByUserId=${userId}`
+      `${MONGO_ROUTE_URL}?accessTokenByUserId=${userId}`
     );
-    // const response = await billowGet<GetAccessTokenResponse>(
-    //   `${baseUrl}/${MONGO_ROUTE_URL}?userId=${userId}`
-    // );
 
     const { accessToken } = response.data;
-    console.log("this is the access token", accessToken);
+
     return {
       data: accessToken,
       message: accessToken
@@ -79,13 +76,19 @@ export const beginFundsTransfer = async (
   userId: string,
   amount: string
 ): Promise<BillowSimpleResponse> => {
-  const accessToken = (await getAccessToken(userId)).data;
-  const accountId = getAccountId(userId);
-
-  if (!accessToken) throw new Error("User doesn't have access token.");
-  if (!accountId) throw new Error("User doesn't have an account linked.");
-
   try {
+    const tokenResponse = await getAccessToken(userId);
+
+    if (!tokenResponse.data) throw new Error("User doesn't have access token.");
+
+    const accountResponse = await getAccountId(userId);
+
+    if (!accountResponse.data)
+      throw new Error("User doesn't have an account linked.");
+
+    const accessToken = accountResponse.data;
+    const accountId = accountResponse.data;
+
     console.log("creating transfer authorization");
     const authorizationResponse = await createTransferAuthorization(
       legalName,

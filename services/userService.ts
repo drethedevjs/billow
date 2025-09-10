@@ -7,14 +7,13 @@ import {
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
 import { handleError } from "@/utils/errorHelper";
-import { baseUrl } from "@/utils/globalHelper";
 
 export const verifyAccessTokenAndGetAccountInformation = async (
   userId: string
 ): Promise<BillowResponse<VerifyAccessTokenAndAccountInformation | null>> => {
   try {
     const response = await billowGet<VerifyAccessTokenAndAccountInformation>(
-      `${baseUrl}/api/plaid/exchange?userId=${userId}`
+      `api/plaid/exchange?userId=${userId}`
     );
 
     const { hasAccessToken, accountInformation } = response.data;
@@ -50,7 +49,7 @@ export const storeAccessTokenAndAccountId = async (
 ): Promise<BillowSimpleResponse> => {
   try {
     await billowPost<CreateAndStoreAccessTokenRequest, BillowSimpleResponse>(
-      `${baseUrl}/api/plaid/exchange`,
+      `api/plaid/exchange`,
       {
         userId,
         publicToken,
