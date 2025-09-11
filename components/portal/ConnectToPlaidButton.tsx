@@ -1,14 +1,28 @@
+import { BillowToastContext } from "@/context/ToastContext";
 import useUser from "@/hooks/useUser";
 import plaidHelper from "@/utils/plaidHelper";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
 const ConnectToPlaidButton = () => {
   const [linkToken, setLinkToken] = useState<string>("");
+  const { setToastMsg, showToast, setIsError } = useContext(BillowToastContext);
+
+  const showFailToast = (msg: string) => {
+    setToastMsg(msg);
+    setIsError(true);
+    showToast();
+  };
 
   useEffect(() => {
     const fetchLinkToken = async () => {
       const response = await plaidHelper.getLinkToken();
+      if (!response.isSuccess) {
+        console.error(response.message);
+        showFailToast(response.message);
+        return;
+      }
+
       setLinkToken(response.data);
     };
 
@@ -26,7 +40,7 @@ const ConnectToPlaidButton = () => {
         user.id
       );
 
-      const {id: accountId, mask} = metadata.accounts[0];
+      const { id: accountId, mask } = metadata.accounts[0];
 
       const accessToken = response.data;
       const storedResponse = await plaidHelper.storeAccessToken(
@@ -35,9 +49,12 @@ const ConnectToPlaidButton = () => {
       );
 
       if (!storedResponse.isSuccess) throw new Error(storedResponse.message);
-      
-      const storeAccountInfoResponse = await plaidHelper.storeAccountInformation(accountId, mask, user.id);
-      if (!storeAccountInfoResponse.isSuccess) throw new Error(storedResponse.message);
+      console.info(storedResponse.message);
+
+      const storeAccountInfoResponse =
+        await plaidHelper.storeAccountInformation(accountId, mask, user.id);
+      if (!storeAccountInfoResponse.isSuccess)
+        throw new Error(storedResponse.message);
     },
     onExit: plaidHelper.logErrorsToConsole,
     // onEvent: (eventName, metadata) => {},
@@ -48,7 +65,7 @@ const ConnectToPlaidButton = () => {
   return (
     <button
       onClick={() => open()}
-      className="billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center"
+      className="disabled:bg-slate-500 disabled:cursor-not-allowed billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center"
       disabled={!linkToken}
     >
       <span className="text-sm">Connect to&nbsp;</span>

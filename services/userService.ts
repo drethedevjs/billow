@@ -20,8 +20,7 @@ export const verifyAccessTokenAndGetAccountInformation = async (
     if (hasAccessToken) {
       return {
         data: { hasAccessToken, accountInformation },
-        message:
-          "Has access token and the account ID was retrieved successfully",
+        message: "Access token and the account ID was retrieved successfully",
         isSuccess: true
       };
     } else {

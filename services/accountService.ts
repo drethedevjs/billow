@@ -46,13 +46,36 @@ export const getAccountId = async (
 
     return {
       data: response.data?.id,
-      message: "Account information retrieved!",
+      message: "Account Id retrieved!",
       isSuccess: true
     };
   } catch (error: unknown) {
     handleError(error);
     return {
       data: "",
+      message: "Failed to retrieve account Id",
+      isSuccess: false
+    };
+  }
+};
+
+export const getAccount = async (
+  userId: string
+): Promise<BillowResponse<PlaidAccount | null>> => {
+  try {
+    const response = await billowGet<PlaidAccount>(
+      `${MONGO_ROUTE_URL}/accounts?accountByUserId=${userId}`
+    );
+
+    return {
+      data: response.data,
+      message: "Account information retrieved!",
+      isSuccess: true
+    };
+  } catch (error: unknown) {
+    handleError(error);
+    return {
+      data: null,
       message: "Failed to retrieve account Id",
       isSuccess: false
     };

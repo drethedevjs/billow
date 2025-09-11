@@ -2,21 +2,28 @@ import {
   BillowResponse,
   BillowSimpleResponse
 } from "@/interfaces/BillowResponse";
+import GetLinkTokenResponse from "@/interfaces/responses/GetLinkTokenResponse";
 import { storeAccountInformation } from "@/services/accountService";
 import { storeAccessToken } from "@/services/databaseService";
 import { createAccessToken } from "@/services/plaidService";
-import axios from "axios";
 import { PlaidLinkError, PlaidLinkOnSuccessMetadata } from "react-plaid-link";
+import { billowGet } from "./axiosHelper";
 import { baseUrl } from "./globalHelper";
 
 const plaidHelper = {
-  getLinkToken: async () => {
+  getLinkToken: async (): Promise<BillowResponse<string>> => {
     try {
-      const response = await axios.get(`${baseUrl}/api/plaid`);
+      const response = await billowGet<GetLinkTokenResponse>(
+        `${baseUrl}/api/plaid`
+      );
 
-      const linkToken = response.data;
+      const { linkToken } = response.data;
 
-      return linkToken;
+      return {
+        data: linkToken,
+        message: "Link token retrieved!",
+        isSuccess: true
+      };
     } catch (error) {
       throw new Error(`${error}`);
     }

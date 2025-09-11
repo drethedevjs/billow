@@ -10,6 +10,7 @@ import {
   hasHighlightedAccount,
   highlightFirstAccount
 } from "@/utils/dashboardHelper";
+import chalk from "chalk";
 import {
   Table,
   TableBody,
@@ -47,24 +48,16 @@ const Dashboard = () => {
     if (!hasHighlightedAccount()) highlightFirstAccount();
 
     const runFunction = async () => {
-      const inDevelopment = process.env.NODE_ENV === "development";
-      if (inDevelopment) {
-        const response = await verifyAccessTokenAndGetAccountInformation(
-          user!.id
-        );
+      const response = await verifyAccessTokenAndGetAccountInformation(
+        user!.id
+      );
 
-        const info = response.data;
-        if (response.isSuccess && info) {
-          setPlaidConnectivityVerification(info);
-        } else {
-          console.error(response.message);
-        }
-      } else {
-        setPlaidConnectivityVerification({
-          hasAccessToken: true,
-          accountInformation: { accountId: "000", accountMask: "000" }
-        });
-      }
+      const account = response.data;
+      if (response.isSuccess && account) {
+        setPlaidConnectivityVerification(account);
+      } else if (!response.isSuccess) {
+        console.error(chalk.red(response.message));
+      } else console.info(chalk.blueBright(response.message));
     };
 
     runFunction();
@@ -212,7 +205,7 @@ const Dashboard = () => {
                 location={user.accountData.locations[locationIdx]}
                 servicePaymentAmounts={servicePaymentAmounts}
                 accountMask={
-                  plaidConnectivityVerification?.accountInformation?.accountMask
+                  plaidConnectivityVerification?.accountInformation?.mask
                 }
                 penaltyPayments={penaltyPayments}
               />

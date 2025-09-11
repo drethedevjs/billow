@@ -18,16 +18,23 @@ export async function GET(request: NextRequest) {
   }
 }
 
+// storeAccessToken
 export async function POST(request: Request) {
   const { accessToken, userId } = await request.json();
 
-  // const mongoClient = await getMongoClient();
-  // if (!mongoClient) throw new Error("Mongo client missing.");
-
-  // const db = mongoClient.db("billow");
   const collection = db.collection("Users");
-  collection.insertOne({
-    userId,
-    accessToken
-  });
+  const existingUser = await collection.findOne({ userId });
+  if (existingUser) {
+    await collection.updateOne(
+      { userId },
+      { $set: { plaidAccessToken: accessToken } }
+    );
+  } else {
+    await collection.insertOne({
+      userId,
+      plaidAccessToken: accessToken
+    });
+  }
+
+  return Response.json({ message: "Access token stored!" });
 }
