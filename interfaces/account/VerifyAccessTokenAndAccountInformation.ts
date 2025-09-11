@@ -1,7 +1,6 @@
+import { PlaidAccount } from "react-plaid-link";
+
 export default interface VerifyAccessTokenAndAccountInformation {
   hasAccessToken: boolean;
-  accountInformation: {
-    accountId: string;
-    accountMask: string;
-  };
+  accountInformation: PlaidAccount;
 }
