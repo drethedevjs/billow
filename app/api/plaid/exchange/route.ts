@@ -1,10 +1,11 @@
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
-import { getAccountInformation } from "@/lib/accounts";
+import { getAccount } from "@/services/accountService";
 import { getAccessToken } from "@/services/plaidService";
 import plaidClient from "@/utils/plaidClient";
+import { NextRequest } from "next/server";
 
-export async function GET(request: Request) {
-  const { searchParams } = new URL(request.url);
+export async function GET(request: NextRequest) {
+  const { searchParams } = request.nextUrl;
   const userId = searchParams.get("userId");
   if (!userId) {
     return Response.json({
@@ -15,7 +16,7 @@ export async function GET(request: Request) {
 
   const response = await getAccessToken(userId);
   const hasAccessToken = Boolean(response.data);
-  const accountInformation = getAccountInformation(userId);
+  const accountInformation = await getAccount(userId);
 
   return Response.json({ hasAccessToken, accountInformation });
 }
@@ -31,6 +32,7 @@ export async function POST(request: Request) {
 
   const accessToken = response.data.access_token;
   return Response.json(accessToken);
+  // TODO: store access token!!!
 
   // storeAccessToken(accessToken, userId);
   // storeAccountInformation({ userId, accountId, accountMask });
