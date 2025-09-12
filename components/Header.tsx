@@ -12,14 +12,11 @@ const Header = () => {
   return (
     <Navbar fluid rounded className="">
       <NavbarBrand as={Link} href="https://flowbite-react.com">
-        {/* <img
-          src="/favicon.svg"
-          className="mr-3 h-6 sm:h-9"
+        <img
+          src="/billow-logo-blue-no-bckgrnd.png"
+          className="h-6 sm:h-9 mx-3 my-3"
           alt="Flowbite React Logo"
-        /> */}
-        <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
-          Billow
-        </span>
+        />
       </NavbarBrand>
       <div className="flex md:order-2">
         <a
