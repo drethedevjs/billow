@@ -32,10 +32,4 @@ export async function POST(request: Request) {
 
   const accessToken = response.data.access_token;
   return Response.json(accessToken);
-  // TODO: store access token!!!
-
-  // storeAccessToken(accessToken, userId);
-  // storeAccountInformation({ userId, accountId, accountMask });
-
-  // return Response.json({ success: true });
 }
