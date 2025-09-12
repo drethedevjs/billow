@@ -41,7 +41,9 @@ export default function Home() {
           </div>
         </div>
         <div className="w-full md:w-1/2">
-          <h1 className="mb-4 text-primary">Welcome to Billow!</h1>
+          <h1 className="mb-4 text-primary dark:text-error">
+            Welcome to Billow!
+          </h1>
           <p>
             Take the hassle out of paying utility bills. Billow connects
             directly to your service providers, tracks what you owe, and lets

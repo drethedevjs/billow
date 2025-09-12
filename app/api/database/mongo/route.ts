@@ -1,5 +1,6 @@
 import { User } from "@/interfaces/User";
 import { getMongoClient } from "@/utils/mongoHelper";
+import chalk from "chalk";
 import { NextRequest } from "next/server";
 
 const mongoClient = await getMongoClient();
@@ -22,14 +23,19 @@ export async function GET(request: NextRequest) {
 export async function POST(request: Request) {
   const { accessToken, userId } = await request.json();
 
+  if (!accessToken) return Response.json("");
+
   const collection = db.collection("Users");
   const existingUser = await collection.findOne({ userId });
+
   if (existingUser) {
+    console.info(chalk.bgWhite("Update user access token."));
     await collection.updateOne(
       { userId },
       { $set: { plaidAccessToken: accessToken } }
     );
   } else {
+    console.info(chalk.bgWhite("Creating user with access token."));
     await collection.insertOne({
       userId,
       plaidAccessToken: accessToken

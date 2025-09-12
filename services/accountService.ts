@@ -1,3 +1,4 @@
+import BillowPlaidAccount from "@/interfaces/BillowPlaidAccount";
 import {
   BillowResponse,
   BillowSimpleResponse
@@ -9,17 +10,15 @@ import { handleError } from "@/utils/errorHelper";
 import { PlaidAccount } from "react-plaid-link";
 
 export const storeAccountInformation = async (
-  accountId: string,
-  mask: string,
+  account: PlaidAccount,
   userId: string
 ): Promise<BillowSimpleResponse> => {
   try {
     await billowPost<StoreAccountInformationRequest, BillowSimpleResponse>(
-      MONGO_ROUTE_URL,
+      `${MONGO_ROUTE_URL}/accounts`,
       {
         userId,
-        accountId,
-        accountMask: mask
+        account
       }
     );
 
@@ -61,9 +60,9 @@ export const getAccountId = async (
 
 export const getAccount = async (
   userId: string
-): Promise<BillowResponse<PlaidAccount | null>> => {
+): Promise<BillowResponse<BillowPlaidAccount | null>> => {
   try {
-    const response = await billowGet<PlaidAccount>(
+    const response = await billowGet<BillowPlaidAccount>(
       `${MONGO_ROUTE_URL}/accounts?accountByUserId=${userId}`
     );
 

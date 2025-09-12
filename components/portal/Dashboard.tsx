@@ -210,7 +210,11 @@ const Dashboard = () => {
                 penaltyPayments={penaltyPayments}
               />
             ) : (
-              <ConnectToPlaidButton />
+              <ConnectToPlaidButton
+                setPlaidConnectivityVerification={
+                  setPlaidConnectivityVerification
+                }
+              />
             )}
           </div>
         </div>

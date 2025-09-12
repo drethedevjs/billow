@@ -6,7 +6,11 @@ import GetLinkTokenResponse from "@/interfaces/responses/GetLinkTokenResponse";
 import { storeAccountInformation } from "@/services/accountService";
 import { storeAccessToken } from "@/services/databaseService";
 import { createAccessToken } from "@/services/plaidService";
-import { PlaidLinkError, PlaidLinkOnSuccessMetadata } from "react-plaid-link";
+import {
+  PlaidAccount,
+  PlaidLinkError,
+  PlaidLinkOnSuccessMetadata
+} from "react-plaid-link";
 import { billowGet } from "./axiosHelper";
 import { baseUrl } from "./globalHelper";
 
@@ -54,11 +58,10 @@ const plaidHelper = {
     return response;
   },
   storeAccountInformation: async (
-    accountId: string,
-    mask: string,
+    account: PlaidAccount,
     userId: string
   ): Promise<BillowSimpleResponse> => {
-    const response = await storeAccountInformation(accountId, mask, userId);
+    const response = await storeAccountInformation(account, userId);
     return response;
   },
   logErrorsToConsole: (err: PlaidLinkError | null) => {

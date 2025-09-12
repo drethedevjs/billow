@@ -1,5 +1,6 @@
+import { PlaidAccount } from "react-plaid-link";
+
 export default interface StoreAccountInformationRequest {
   userId: string;
-  accountId: string;
-  accountMask: string;
+  account: PlaidAccount;
 }

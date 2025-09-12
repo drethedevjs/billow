@@ -1,10 +1,25 @@
 import { BillowToastContext } from "@/context/ToastContext";
 import useUser from "@/hooks/useUser";
+import VerifyAccessTokenAndAccountInformation from "@/interfaces/account/VerifyAccessTokenAndAccountInformation";
 import plaidHelper from "@/utils/plaidHelper";
+import chalk from "chalk";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useState
+} from "react";
 import { PlaidLinkOptions, usePlaidLink } from "react-plaid-link";
-const ConnectToPlaidButton = () => {
+
+const ConnectToPlaidButton = ({
+  setPlaidConnectivityVerification
+}: {
+  setPlaidConnectivityVerification: Dispatch<
+    SetStateAction<VerifyAccessTokenAndAccountInformation | null>
+  >;
+}) => {
   const [linkToken, setLinkToken] = useState<string>("");
   const { setToastMsg, showToast, setIsError } = useContext(BillowToastContext);
 
@@ -40,8 +55,6 @@ const ConnectToPlaidButton = () => {
         user.id
       );
 
-      const { id: accountId, mask } = metadata.accounts[0];
-
       const accessToken = response.data;
       const storedResponse = await plaidHelper.storeAccessToken(
         accessToken,
@@ -51,10 +64,19 @@ const ConnectToPlaidButton = () => {
       if (!storedResponse.isSuccess) throw new Error(storedResponse.message);
       console.info(storedResponse.message);
 
+      const plaidAccount = metadata.accounts[0];
       const storeAccountInfoResponse =
-        await plaidHelper.storeAccountInformation(accountId, mask, user.id);
+        await plaidHelper.storeAccountInformation(plaidAccount, user.id);
+
       if (!storeAccountInfoResponse.isSuccess)
         throw new Error(storedResponse.message);
+
+      console.info(chalk.blueBright(storeAccountInfoResponse.message));
+
+      setPlaidConnectivityVerification({
+        hasAccessToken: true,
+        accountInformation: plaidAccount
+      });
     },
     onExit: plaidHelper.logErrorsToConsole,
     // onEvent: (eventName, metadata) => {},
@@ -65,7 +87,7 @@ const ConnectToPlaidButton = () => {
   return (
     <button
       onClick={() => open()}
-      className="disabled:bg-slate-500 disabled:cursor-not-allowed billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center"
+      className="disabled:bg-slate-500 disabled:cursor-not-allowed billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center dark:ring-white dark:ring-1"
       disabled={!linkToken}
     >
       <span className="text-sm">Connect to&nbsp;</span>
