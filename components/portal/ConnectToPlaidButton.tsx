@@ -87,7 +87,7 @@ const ConnectToPlaidButton = ({
   return (
     <button
       onClick={() => open()}
-      className="disabled:bg-slate-500 disabled:cursor-not-allowed billow-btn-long h-10 bg-black text-white rounded-md font-semibold my-5 focus:ring-4 focus:ring-neutral-300 flex flex-row items-center justify-center dark:ring-white dark:ring-1"
+      className="plaid-btn billow-btn-long"
       disabled={!linkToken}
     >
       <span className="text-sm">Connect to&nbsp;</span>
