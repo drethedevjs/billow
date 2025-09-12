@@ -11,11 +11,11 @@ import { NavLink } from "./NavLinks";
 const Header = () => {
   return (
     <Navbar fluid rounded className="">
-      <NavbarBrand as={Link} href="https://flowbite-react.com">
+      <NavbarBrand as={Link} href="/">
         <img
           src="/billow-logo-blue-no-bckgrnd.png"
           className="h-6 sm:h-9 mx-3 my-3"
-          alt="Flowbite React Logo"
+          alt="Billow Logo"
         />
       </NavbarBrand>
       <div className="flex md:order-2">
