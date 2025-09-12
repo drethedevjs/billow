@@ -1,7 +1,5 @@
 "use server";
 
-import { POST as transferPostHandler } from "@/app/api/plaid/create-transfer/route";
-import { POST as transferCreateHandler } from "@/app/api/plaid/initiate-transfer/route";
 import {
   BillowResponse,
   BillowSimpleResponse
@@ -9,15 +7,16 @@ import {
 import AuthorizeTransferCreateRequest from "@/interfaces/requests/AuthorizeTransferCreateRequest";
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
 import InitiateTransferRequest from "@/interfaces/requests/InitiateTransferRequest";
+import AuthorizeTransferCreateResponse from "@/interfaces/responses/AuthorizeTransferCreateResponse";
 import GetAccessTokenResponse from "@/interfaces/responses/GetAccessTokenResponse";
 import { getAccountId } from "@/services/accountService";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
-import { BillowRequest } from "@/utils/billowHelper";
 import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
 import { PLAID_EXCHANGE_URL } from "@/utils/constants/plaidConstants";
 import { handleError } from "@/utils/errorHelper";
 import { baseUrl } from "@/utils/globalHelper";
 import { AxiosError } from "axios";
+import chalk from "chalk";
 import { TransferAuthorizationDecision, TransferCreateResponse } from "plaid";
 
 export const createAccessToken = async (
@@ -83,13 +82,17 @@ export const beginFundsTransfer = async (
 
     const accountResponse = await getAccountId(userId);
 
-    if (!accountResponse.data)
-      throw new Error("User doesn't have an account linked.");
+    if (!accountResponse.isSuccess) throw new Error(accountResponse.message);
 
-    const accessToken = accountResponse.data;
+    if (!accountResponse.data) {
+      console.error(accountResponse.message);
+      throw new Error("User doesn't have an account linked.");
+    }
+
+    const accessToken = tokenResponse.data;
     const accountId = accountResponse.data;
 
-    console.log("creating transfer authorization");
+    console.info(chalk.blueBright("creating transfer authorization"));
     const authorizationResponse = await createTransferAuthorization(
       legalName,
       userId,
@@ -100,12 +103,19 @@ export const beginFundsTransfer = async (
 
     const authorizationId = authorizationResponse.data;
 
-    console.log("transfer authorization created successfully");
-    console.log("initiating transfer");
+    console.info(
+      chalk.blueBright("transfer authorization created successfully")
+    );
+    console.info(chalk.blueBright("initiating transfer"));
 
-    await initiateTransfer(authorizationId, accessToken, accountId, amount);
+    const initiateTransResponse = await initiateTransfer(
+      authorizationId,
+      accessToken,
+      accountId,
+      amount
+    );
 
-    console.log("transfer initiated successfully");
+    console.info(chalk.blueBright(initiateTransResponse.message));
 
     return {
       message: "Transfer initiated successfully",
@@ -129,20 +139,21 @@ const createTransferAuthorization = async (
   accessToken: string,
   accountId: string
 ): Promise<BillowResponse<string>> => {
-  const request = BillowRequest<AuthorizeTransferCreateRequest>(
-    `${baseUrl}/api/plaid/create-transfer`,
-    "POST",
-    {
-      legalName,
-      userId,
-      amount,
-      accessToken,
-      accountId
-    }
-  );
-  const response = await transferPostHandler(request);
-  const data = await response.json();
-  const { decision, id: authorizationId } = data.authorization;
+  const response = await billowPost<
+    AuthorizeTransferCreateRequest,
+    AuthorizeTransferCreateResponse
+  >(`${baseUrl}/api/plaid/create-transfer`, {
+    legalName,
+    userId,
+    amount,
+    accessToken,
+    accountId
+  });
+
+  console.log("back from createAuthTransfer", response.data);
+
+  const { decision, id: authorizationId } = response.data;
+
   if (decision === TransferAuthorizationDecision.Declined)
     throw new Error("Authorization was declined!");
 
@@ -170,22 +181,18 @@ const initiateTransfer = async (
   accountId: string,
   amount: string
 ): Promise<BillowResponse<TransferCreateResponse | null>> => {
-  const request = BillowRequest<InitiateTransferRequest>(
-    `${baseUrl}/api/plaid/initiate-transfer`,
-    "POST",
-    {
-      authorizationId,
-      accessToken,
-      accountId,
-      amount
-    }
-  );
-
-  const response = await transferCreateHandler(request);
-  const data = await response.json();
+  const response = await billowPost<
+    InitiateTransferRequest,
+    TransferCreateResponse
+  >(`${baseUrl}/api/plaid/initiate-transfer`, {
+    authorizationId,
+    accessToken,
+    accountId,
+    amount
+  });
 
   return {
-    data,
+    data: response.data,
     message: "Transfer initiated successfully",
     isSuccess: true
   };

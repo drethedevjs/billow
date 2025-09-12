@@ -18,7 +18,7 @@ export async function POST(request: Request) {
     amount
   );
 
-  return Response.json(response);
+  return Response.json(response.data);
 }
 
 const initiateTransfer = async (

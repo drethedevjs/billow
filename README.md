@@ -31,5 +31,4 @@
 
 - Find a modern way to use useContext. See toast.
 - Figure out how to use axios base url.
-- Remove all instances where `BillowRequest` is created and passed in and just use `billowGet` or `billowPost`. Or maybe do away with the latter and keep the former.
 - Add success and fail toast that's in the payment button to a global utility.

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
     const account: BillowPlaidAccount | null =
       await collection.findOne<BillowPlaidAccount>({ userId });
 
-    return Response.json({ account: account });
+    return Response.json(account);
   }
 
   // TODO: add the name of the implementation requested to this interpolation.
