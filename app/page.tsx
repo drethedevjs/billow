@@ -3,7 +3,7 @@ import { Button, Checkbox, Label, TextInput } from "flowbite-react";
 export default function Home() {
   return (
     <>
-      <div className="w-full flex flex-col md:flex-row p-10">
+      <div className="w-full flex flex-col-reverse md:flex-row p-10">
         <div className="w-full md:w-1/2">
           <div className="mx-auto max-w-md">
             <p className="!text-4xl mb-5 text-primary dark:text-accent font-semibold text-center">
