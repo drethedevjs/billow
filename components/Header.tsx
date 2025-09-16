@@ -1,3 +1,4 @@
+"use client";
 import {
   Button,
   Navbar,
@@ -6,17 +7,49 @@ import {
   NavbarToggle
 } from "flowbite-react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { NavLink } from "./NavLinks";
 
 const Header = () => {
+  const [isDarkMode, setIsDarkMode] = useState<Boolean>();
+  const [toggleButton, setToggleButton] = useState<HTMLButtonElement | null>();
+
+  useEffect(() => {
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", e => {
+        setIsDarkMode(e.matches);
+      });
+
+    const navLinks = document.getElementsByTagName("li");
+    for (let link of navLinks)
+      link.addEventListener("click", e => {
+        console.log("Event listened to,: ", e);
+      });
+
+    setToggleButton(
+      document.querySelector<HTMLButtonElement>(
+        '[data-testid="flowbite-navbar-toggle"]'
+      )
+    );
+  }, []);
+
   return (
-    <Navbar fluid rounded className="">
+    <Navbar fluid>
       <NavbarBrand as={Link} href="/">
-        <img
-          src="/billow-logo-blue-no-bckgrnd.png"
-          className="h-6 sm:h-9 mx-3 my-3"
-          alt="Billow Logo"
-        />
+        {isDarkMode ? (
+          <img
+            src="/billow-logo-cream-no-bckgrnd.png"
+            className="h-6 sm:h-9 mx-3 my-3"
+            alt="Billow Logo"
+          />
+        ) : (
+          <img
+            src="/billow-logo-blue-no-bckgrnd.png"
+            className="h-6 sm:h-9 mx-3 my-3"
+            alt="Billow Logo"
+          />
+        )}
       </NavbarBrand>
       <div className="flex md:order-2">
         <a
@@ -30,11 +63,23 @@ const Header = () => {
         </Button>
         <NavbarToggle />
       </div>
-      <NavbarCollapse>
-        <NavLink href="/">Home</NavLink>
-        <NavLink href="/about">About</NavLink>
-        <NavLink href="/faq">FAQ</NavLink>
-        <NavLink href="/portal">Dashboard</NavLink>
+      <NavbarCollapse
+        className={`absolute top-16 left-0 z-10 w-full drop-shadow-2xl rounded-b-lg ${
+          isDarkMode ? "bg-navy" : "bg-cream"
+        }`}
+      >
+        <NavLink href="/" toggleButton={toggleButton}>
+          Home
+        </NavLink>
+        <NavLink href="/about" toggleButton={toggleButton}>
+          About
+        </NavLink>
+        <NavLink href="/faq" toggleButton={toggleButton}>
+          FAQ
+        </NavLink>
+        <NavLink href="/portal" toggleButton={toggleButton}>
+          Dashboard
+        </NavLink>
         {/* <NavLink href="/contact" disable={true}>
           Contact
         </NavLink> */}

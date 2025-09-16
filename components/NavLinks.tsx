@@ -7,11 +7,13 @@ import { ReactNode } from "react";
 export const NavLink = ({
   href,
   children,
-  disable = false
+  disable = false,
+  toggleButton
 }: {
   href: string;
   children: ReactNode;
   disable?: boolean;
+  toggleButton: HTMLButtonElement | null | undefined;
 }) => {
   const path: string | null = usePathname();
 
@@ -20,20 +22,16 @@ export const NavLink = ({
       {disable ? (
         <button className="text-muted cursor-not-allowed">{children}</button>
       ) : (
-        <Link href={href} className={`${path === href ? "text-accent" : ""}`}>
+        <Link
+          onClick={e => toggleButton?.click()}
+          href={href}
+          className={`${
+            path === href ? "text-accent" : ""
+          } lg:static lg:z-0 relative z-10 w-full text-2xl p-3`}
+        >
           {children}
         </Link>
       )}
-
-      {/* <NavbarCollapse>
-        <NavbarLink href="/">Home</NavbarLink>
-        <NavbarLink as={Link} href="#">
-          About
-        </NavbarLink>
-        <NavbarLink href="#">FAQ</NavbarLink>
-        <NavbarLink href="/portal">Dashboard</NavbarLink>
-        <NavbarLink href="#">Contact</NavbarLink>
-      </NavbarCollapse> */}
     </>
   );
 };
