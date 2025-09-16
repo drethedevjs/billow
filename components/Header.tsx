@@ -64,7 +64,7 @@ const Header = () => {
         <NavbarToggle />
       </div>
       <NavbarCollapse
-        className={`absolute top-16 left-0 z-10 w-full drop-shadow-2xl rounded-b-lg ${
+        className={`absolute lg:static lg:drop-shadow-none lg:bg-transparent top-16 left-0 z-10 w-full drop-shadow-2xl rounded-b-lg ${
           isDarkMode ? "bg-navy" : "bg-cream"
         }`}
       >
