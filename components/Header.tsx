@@ -15,11 +15,13 @@ const Header = () => {
   const [toggleButton, setToggleButton] = useState<HTMLButtonElement | null>();
 
   useEffect(() => {
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", e => {
-        setIsDarkMode(e.matches);
-      });
+    const themeMode = window.matchMedia("(prefers-color-scheme: dark)");
+    themeMode.addEventListener("change", e => {
+      console.log("Is it dark mode?", e.matches);
+      setIsDarkMode(e.matches);
+    });
+
+    setIsDarkMode(themeMode.matches);
 
     const navLinks = document.getElementsByTagName("li");
     for (let link of navLinks)
@@ -65,7 +67,7 @@ const Header = () => {
       </div>
       <NavbarCollapse
         className={`absolute lg:static lg:drop-shadow-none lg:bg-transparent top-16 left-0 z-10 w-full drop-shadow-2xl rounded-b-lg ${
-          isDarkMode ? "bg-navy" : "bg-cream"
+          isDarkMode ? "bg-primary" : "bg-cream"
         }`}
       >
         <NavLink href="/" toggleButton={toggleButton}>
