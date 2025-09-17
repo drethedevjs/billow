@@ -1,9 +1,4 @@
-import {
-  Footer,
-  FooterCopyright,
-  FooterLink,
-  FooterLinkGroup
-} from "flowbite-react";
+import { Footer, FooterCopyright } from "flowbite-react";
 
 const TheFooter = () => {
   return (
@@ -19,10 +14,6 @@ const TheFooter = () => {
           CSRA Web Services
         </a>
       </span>
-      <FooterLinkGroup>
-        <FooterLink href="/about">About</FooterLink>
-        <FooterLink href="#">Contact</FooterLink>
-      </FooterLinkGroup>
     </Footer>
   );
 };
