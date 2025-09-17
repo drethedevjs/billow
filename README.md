@@ -26,9 +26,3 @@
 🌙 Dark mode ready (via Flowbite)
 
 ⚙️ Sidebar navigation without full page reloads
-
-## ToDo
-
-- Find a modern way to use useContext. See toast.
-- Figure out how to use axios base url.
-- Add success and fail toast that's in the payment button to a global utility.
