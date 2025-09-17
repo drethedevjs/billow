@@ -44,7 +44,7 @@ p {
 }
 
 h2 {
-  @apply text-4xl;
+  @apply lg:text-4xl text-3xl;
 }
 
 h3 {
@@ -56,12 +56,12 @@ h3 {
 }
 
 .page-name {
-  @apply text-right text-8xl mt-10;
+  @apply text-right lg:text-8xl !text-5xl mt-10;
 }
 
 @layer components {
   #about-us li {
-    @apply indent-10 mb-4 text-xl;
+    @apply lg:indent-10 indent-4 mb-4 text-xl;
   }
 }
 
@@ -79,4 +79,12 @@ h3 {
 
 .payment-processing-btn {
   @apply bg-white hover:bg-white border border-accent text-accent dark:bg-white dark:hover:bg-white dark:hover:text-accent cursor-not-allowed;
+}
+
+.billow-container {
+  @apply container mx-auto lg:px-10 px-5;
+}
+
+.about-sub-header {
+  @apply font-semibold mt-8 mb-4;
 }

@@ -1,6 +1,6 @@
 const About = () => {
   return (
-    <section id="about-us" className="">
+    <section id="about-us" className="billow-container">
       <h1 className="page-name">About</h1>
 
       <p className="mb-6 mt-10">
@@ -11,21 +11,21 @@ const About = () => {
         place.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">What We Do</h2>
+      <h2 className="about-sub-header">What We Do</h2>
       <ul className="list-disc list-inside mb-6">
         <li>View current and past bills</li>
         <li>Track service details across multiple locations</li>
         <li>Make partial or full payments easily and securely</li>
       </ul>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Our Vision</h2>
+      <h2 className="about-sub-header">Our Vision</h2>
       <p className="mb-6">
         We're building tools that reduce the stress of monthly bills by making
         financial responsibility more approachable. Whether it's water, power,
         recycling, or more, Billow puts control back in your hands.
       </p>
 
-      <h2 className="text-2xl font-semibold mt-8 mb-4">Why Choose Billow?</h2>
+      <h2 className="about-sub-header">Why Choose Billow?</h2>
       <ul className="list-disc list-inside mb-6">
         <li>
           <strong>Clarity</strong>: See exactly what you owe, when, and why.

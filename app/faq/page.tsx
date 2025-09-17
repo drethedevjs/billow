@@ -7,7 +7,7 @@ import {
 
 const FAQ = () => {
   return (
-    <section id="faq">
+    <section id="faq" className="billow-container">
       <h1 className="page-name">Frequently Asked Questions</h1>
 
       <Accordion collapseAll className="mt-10">

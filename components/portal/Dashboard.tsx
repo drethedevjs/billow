@@ -101,20 +101,21 @@ const Dashboard = () => {
   }, [services]);
 
   return (
-    <>
-      <h1>Dashboard</h1>
+    <section>
+      <div className="mx-5">
+        <h1>Dashboard</h1>
+        <h2 className="mt-8 p-3 bg-accent text-white font-semibold rounded-sm">
+          {user.accountData.utilityCompanyName}
+        </h2>
 
-      <h2 className="mt-8 p-3 bg-accent text-white font-semibold rounded-sm">
-        {user.accountData.utilityCompanyName}
-      </h2>
-
-      <p className="my-4">
-        <span className="font-semibold">Customer Name: </span>
-        {user.accountData.accountHolderFirstName}{" "}
-        {user.accountData.accountHolderLastName}
-      </p>
-      <hr></hr>
-      <div className="flex xl:flex-row flex-col mt-5">
+        <p className="my-4">
+          <span className="font-semibold">Customer Name: </span>
+          {user.accountData.accountHolderFirstName}{" "}
+          {user.accountData.accountHolderLastName}
+        </p>
+        <hr></hr>
+      </div>
+      <div className="flex xl:flex-row flex-col mt-5 mx-5">
         <div className="w-full xl:w-1/2">
           <LocationSelector
             accountData={user.accountData}
@@ -124,7 +125,7 @@ const Dashboard = () => {
         <hr className="flex lg:hidden my-10 border-accent border"></hr>
         <div className="w-full xl:w-1/2">
           <h3 className="text-center mb-4">Services</h3>
-          <div className="px-4 pb-5">
+          <div className="lg:px-4 pb-5">
             <Table>
               <TableHead className="dark:bg-accent">
                 <TableRow className="dark:!bg-accent dark:text-white">
@@ -219,7 +220,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
-    </>
+    </section>
   );
 };
 

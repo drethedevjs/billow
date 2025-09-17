@@ -17,7 +17,7 @@ import Profile from "../../components/portal/Profile";
 const Portal = () => {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const unreadMessageCount = useSelector((state: RootState) =>
-    state.inbox.filter((msg) => !msg.read).length.toString()
+    state.inbox.filter(msg => !msg.read).length.toString()
   );
 
   const highlightSidebarItem = (tabName: string) => {
@@ -96,7 +96,7 @@ const Portal = () => {
           </SidebarItemGroup>
         </SidebarItems>
       </Sidebar>
-      <div className="p-10 w-full md:w-9/12">{renderContent()}</div>
+      <div className="lg:p-10 w-full md:w-9/12">{renderContent()}</div>
     </div>
   );
 };
