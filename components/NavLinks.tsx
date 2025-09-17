@@ -23,7 +23,7 @@ export const NavLink = ({
         <button className="text-muted cursor-not-allowed">{children}</button>
       ) : (
         <Link
-          onClick={e => toggleButton?.click()}
+          onClick={() => toggleButton?.click()}
           href={href}
           className={`${
             path === href ? "text-accent" : ""

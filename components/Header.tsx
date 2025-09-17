@@ -11,7 +11,7 @@ import { useEffect, useState } from "react";
 import { NavLink } from "./NavLinks";
 
 const Header = () => {
-  const [isDarkMode, setIsDarkMode] = useState<Boolean>();
+  const [isDarkMode, setIsDarkMode] = useState<boolean>();
   const [toggleButton, setToggleButton] = useState<HTMLButtonElement | null>();
 
   useEffect(() => {
@@ -22,12 +22,6 @@ const Header = () => {
     });
 
     setIsDarkMode(themeMode.matches);
-
-    const navLinks = document.getElementsByTagName("li");
-    for (let link of navLinks)
-      link.addEventListener("click", e => {
-        console.log("Event listened to,: ", e);
-      });
 
     setToggleButton(
       document.querySelector<HTMLButtonElement>(

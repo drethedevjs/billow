@@ -42,7 +42,7 @@ const ConnectToPlaidButton = ({
     };
 
     if (process.env.NODE_ENV === "development") fetchLinkToken();
-  }, []);
+  });
 
   const user = useUser();
 
