@@ -17,7 +17,6 @@ const Header = () => {
   useEffect(() => {
     const themeMode = window.matchMedia("(prefers-color-scheme: dark)");
     themeMode.addEventListener("change", e => {
-      console.log("Is it dark mode?", e.matches);
       setIsDarkMode(e.matches);
     });
 
