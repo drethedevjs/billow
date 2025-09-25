@@ -4,8 +4,8 @@ import {
 } from "@/interfaces/BillowResponse";
 import GetLinkTokenResponse from "@/interfaces/responses/GetLinkTokenResponse";
 import { storeAccountInformation } from "@/services/accountService";
-import { storeAccessToken } from "@/services/databaseService";
 import { createAccessToken } from "@/services/plaidService";
+import { storeAccessToken } from "@/services/userService";
 import {
   PlaidAccount,
   PlaidLinkError,

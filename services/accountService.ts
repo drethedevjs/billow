@@ -5,7 +5,7 @@ import {
 } from "@/interfaces/BillowResponse";
 import StoreAccountInformationRequest from "@/interfaces/requests/StoreAccountInformationRequest";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
-import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
+import { ACCOUNT_ROUTE_URL } from "@/utils/constants/billowConstants";
 import { handleError } from "@/utils/errorHelper";
 import { PlaidAccount } from "react-plaid-link";
 
@@ -15,7 +15,7 @@ export const storeAccountInformation = async (
 ): Promise<BillowSimpleResponse> => {
   try {
     await billowPost<StoreAccountInformationRequest, BillowSimpleResponse>(
-      `${MONGO_ROUTE_URL}/accounts`,
+      ACCOUNT_ROUTE_URL,
       {
         userId,
         account
@@ -40,7 +40,7 @@ export const getAccountId = async (
 ): Promise<BillowResponse<string>> => {
   try {
     const response = await billowGet<PlaidAccount>(
-      `${MONGO_ROUTE_URL}/accounts?accountByUserId=${userId}`
+      `${ACCOUNT_ROUTE_URL}?accountByUserId=${userId}`
     );
 
     return {
@@ -63,7 +63,7 @@ export const getAccount = async (
 ): Promise<BillowResponse<BillowPlaidAccount | null>> => {
   try {
     const response = await billowGet<BillowPlaidAccount>(
-      `${MONGO_ROUTE_URL}/accounts?accountByUserId=${userId}`
+      `${ACCOUNT_ROUTE_URL}?accountByUserId=${userId}`
     );
 
     return {

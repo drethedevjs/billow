@@ -11,8 +11,10 @@ import AuthorizeTransferCreateResponse from "@/interfaces/responses/AuthorizeTra
 import GetAccessTokenResponse from "@/interfaces/responses/GetAccessTokenResponse";
 import { getAccountId } from "@/services/accountService";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
-import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
-import { PLAID_EXCHANGE_URL } from "@/utils/constants/plaidConstants";
+import {
+  PLAID_BASE_URL,
+  USERS_ROUTE_URL
+} from "@/utils/constants/billowConstants";
 import { handleError } from "@/utils/errorHelper";
 import { baseUrl } from "@/utils/globalHelper";
 import { AxiosError } from "axios";
@@ -26,7 +28,7 @@ export const createAccessToken = async (
   mask: string
 ): Promise<BillowResponse<string>> => {
   const response = await billowPost<CreateAndStoreAccessTokenRequest, string>(
-    PLAID_EXCHANGE_URL,
+    `${PLAID_BASE_URL}/exchange`,
     {
       userId,
       publicToken,
@@ -47,7 +49,7 @@ export const getAccessToken = async (
 ): Promise<BillowResponse<string>> => {
   try {
     const response = await billowGet<GetAccessTokenResponse>(
-      `${MONGO_ROUTE_URL}?accessTokenByUserId=${userId}`
+      `${USERS_ROUTE_URL}?accessTokenByUserId=${userId}`
     );
 
     const { accessToken } = response.data;

@@ -1,6 +1,6 @@
 import BillowPlaidAccount from "@/interfaces/BillowPlaidAccount";
 import StoreAccountInformationRequest from "@/interfaces/requests/StoreAccountInformationRequest";
-import { MONGO_ROUTE_URL } from "@/utils/constants/databaseConstants";
+import { ACCOUNT_ROUTE_URL } from "@/utils/constants/billowConstants";
 import { getMongoClient } from "@/utils/mongoHelper";
 import { NextRequest } from "next/server";
 
@@ -22,8 +22,11 @@ export async function GET(request: NextRequest) {
     return Response.json(account);
   }
 
+  console.info("keys", searchParams.keys());
+  console.info("values", searchParams.values());
+
   // TODO: add the name of the implementation requested to this interpolation.
-  throw new Error(`${MONGO_ROUTE_URL}/account: No implementation.`);
+  throw new Error(`${ACCOUNT_ROUTE_URL}: No implementation.`);
 }
 
 // storeAccountInformation

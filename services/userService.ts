@@ -5,7 +5,12 @@ import {
   BillowSimpleResponse
 } from "@/interfaces/BillowResponse";
 import CreateAndStoreAccessTokenRequest from "@/interfaces/requests/CreateAndStoreAccessTokenRequest";
+import { StoreAccessTokenRequest } from "@/interfaces/requests/StoreAccessTokenRequest";
 import { billowGet, billowPost } from "@/utils/axiosHelper";
+import {
+  PLAID_BASE_URL,
+  USERS_ROUTE_URL
+} from "@/utils/constants/billowConstants";
 import { handleError } from "@/utils/errorHelper";
 
 export const verifyAccessTokenAndGetAccountInformation = async (
@@ -13,7 +18,7 @@ export const verifyAccessTokenAndGetAccountInformation = async (
 ): Promise<BillowResponse<VerifyAccessTokenAndAccountInformation | null>> => {
   try {
     const response = await billowGet<VerifyAccessTokenAndAccountInformation>(
-      `api/plaid/exchange?userId=${userId}`
+      `${PLAID_BASE_URL}/exchange?userId=${userId}`
     );
 
     const { hasAccessToken, accountInformation } = response.data;
@@ -48,7 +53,7 @@ export const storeAccessTokenAndAccountId = async (
 ): Promise<BillowSimpleResponse> => {
   try {
     await billowPost<CreateAndStoreAccessTokenRequest, BillowSimpleResponse>(
-      `api/plaid/exchange`,
+      `${PLAID_BASE_URL}/exchange`,
       {
         userId,
         publicToken,
@@ -68,4 +73,19 @@ export const storeAccessTokenAndAccountId = async (
       isSuccess: false
     };
   }
+};
+
+export const storeAccessToken = async (
+  accessToken: string,
+  userId: string
+): Promise<BillowSimpleResponse> => {
+  await billowPost<StoreAccessTokenRequest, void>(USERS_ROUTE_URL, {
+    accessToken,
+    userId
+  });
+
+  return {
+    message: "Access token saved to database!",
+    isSuccess: true
+  };
 };
